@@ -1,0 +1,99 @@
+/* Common styles */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #e83b3b;
+}
+
+.playerBox {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.label {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    color: #555;
+}
+
+.input-name {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    background-color: #f1f1f1;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #666;
+}
+
+.ready-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    background-color: #e83b3b;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.ready-btn:hover {
+    background-color: #c92c2c;
+}
+
+.start-btn {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    background-color: #10b981;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 2rem;
+    transition: background-color 0.3s ease;
+}
+
+.start-btn:hover {
+    background-color: #0d8f6e;
+}
+
+.credit{
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: #555;
+}
