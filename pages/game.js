@@ -5,7 +5,7 @@ export default function game() {
 	return (
 		<div>
 			<HexGridDemo />
-			<Editor></Editor>
+			{/* <Editor></Editor> */}
 		</div>
 	);
 }
