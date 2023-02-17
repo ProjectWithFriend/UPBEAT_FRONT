@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
-
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 export default function Home() {
@@ -24,7 +25,15 @@ export default function Home() {
 			setReadyP2(!readyP2);
 		}
 	};
+	const router = useRouter();
 
+	const start = () => {
+		if (readyP1 && readyP2) {
+			router.push("/game");
+		} else {
+			return;
+		}
+	};
 	return (
 		<div className="container">
 			<h1>UPBEAT</h1>
@@ -64,7 +73,7 @@ export default function Home() {
 					</button>
 				</div>
 			</div>
-			<button className="start-btn">
+			<button className="start-btn" onClick={() => start()}>
 				{readyP2 && readyP1 ? "Start" : "Wait for start"}
 			</button>
 			<span className="credit">© 2023 Our Group. All rights reserved.</span>
