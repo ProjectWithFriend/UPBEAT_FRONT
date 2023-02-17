@@ -3,13 +3,44 @@ import HexagonGrid from "./HexagonGrid";
 import times from "lodash/times";
 
 const HexGridDemo = () => {
-	const getHexProps = (hexagon) => {
+	//create a random in range function
+	function getRandomInt(max) {
+		return Math.floor(Math.random() * max);
+	}
+	let rand = getRandomInt(102);
+	console.log(rand);
+	//fill another color in the hexagon that receive from the random function
+	const RandomCity = (hexagon) => {
+		if (hexagon === rand) {
+			return {
+				style: {
+					fill: "#000000",
+					stroke: "white",
+				},
+				onClick: () => alert(`Hexagon n.${hexagon} has been clicked`),
+			};
+		} else {
+			return {
+				style: {
+					fill: "#007aff",
+					stroke: "white",
+				},
+				onClick: () => alert(`Hexagon n.${hexagon} has been clicked`),
+			};
+		}
+	};
+
+	const getHexProps = (hexagon, props) => {
+		const style = {
+			...props.style,
+			...(props.cityProps &&
+				props.cityProps(hexagon) &&
+				props.cityProps(hexagon).style),
+		};
+		console.log(style);
 		return {
-			style: {
-				fill: "#007aff",
-				stroke: "white",
-			},
-			onClick: () => alert(`Hexagon n.${hexagon} has been clicked`),
+			props,
+			style,
 		};
 	};
 
@@ -35,8 +66,9 @@ const HexGridDemo = () => {
 			gridWidth={500}
 			gridHeight={500}
 			hexagons={hexagons}
-			hexProps={getHexProps}
+			hexProps={(getHexProps, RandomCity)}
 			renderHexagonContent={renderHexagonContent}
+			cityProps={RandomCity}
 		/>
 	);
 };

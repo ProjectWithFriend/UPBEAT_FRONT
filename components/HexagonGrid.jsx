@@ -22,13 +22,14 @@ const getGridDimensions = (gridWidth, gridHeight, N) => {
 		rows,
 	};
 };
-
+//check function if it is a function and invoke it with params, otherwise return default value
 const tryInvoke = (func, params = [], defaultValue = null) => {
 	return isFunction(func) ? func(...params) : defaultValue;
 };
 
 const HexagonGrid = (props) => {
 	const {
+		cityProps,
 		hexagons,
 		gridHeight,
 		gridWidth,
