@@ -1,82 +1,129 @@
-"use client";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useState } from "react";
+import {useRouter} from "next/router";
+import {useEffect, useRef, useState} from "react";
+import {over} from "stompjs";
+import SockJS from "sockjs-client";
 
 export default function Home() {
-	const [nameP1, setNameP1] = useState("");
-	const [nameP2, setNameP2] = useState("");
-	const [readyP1, setReadyP1] = useState(false);
-	const [readyP2, setReadyP2] = useState(false);
+    const [nameP1, setNameP1] = useState("");
+    const [nameP2, setNameP2] = useState("");
+    const [readyP1, setReadyP1] = useState(false);
+    const [readyP2, setReadyP2] = useState(false);
+	const stompClient = useRef(null);
+    useEffect(() => {
+        const socket = new SockJS("http://localhost:8080/ws");
+		let client = over(socket);
+        client.connect({}, () => {
+            stompClient.current = client;
+			stompClient.current.subscribe("/topic/name", (data) => {
+                console.log("Received data from server: " + data.body)
+				data = JSON.parse(data.body);
+				setNameP1(data.nameP1);
+				setNameP2(data.nameP2);
+			});
+            stompClient.current.subscribe("/topic/ready", (data) => {
+                console.log("Received data from server: " + data.body)
+                data = JSON.parse(data.body);
+                setReadyP1(data.readyP1);
+                setReadyP2(data.readyP2);
+            });
+		});
+    }, []);
 
-	const updateReadyP1 = () => {
-		if (nameP1.length === 0) {
-			alert("Please enter your name at Player1");
-		} else {
-			setReadyP1(!readyP1);
-		}
-	};
+    const nameChangeP1 = (name) => {
+        setNameP1(name);
+        stompClient.current.send("/app/ready/typeName", {}, JSON.stringify({
+            nameP1: name,
+            nameP2: nameP2
+        }));
+    }
 
-	const updateReadyP2 = () => {
-		if (nameP2.length === 0) {
-			alert("Please enter your name at Player2");
-		} else {
-			setReadyP2(!readyP2);
-		}
-	};
-	const router = useRouter();
+    const nameChangeP2 = (name) => {
+        setNameP2(name);
+        stompClient.current.send("/app/ready/typeName", {}, JSON.stringify({
+            nameP1: nameP1,
+            nameP2: name
+        }));
+    }
+    //Client state
+    const updateReadyP1 = () => {
+        if (nameP1.length === 0) {
+            alert("Please enter your name at Player1");
+        } else {
+            // setReadyP1(!readyP1);
+            stompClient.current.send("/app/ready/changeReady", {}, JSON.stringify({
+                readyP1: !readyP1,
+                readyP2: readyP2
+            }));
+            console.log("player1 ready: " + readyP1)
+        }
+    };
 
-	const start = () => {
-		if (readyP1 && readyP2) {
-			router.push("/game");
-		} else {
-			return;
-		}
-	};
-	return (
-		<div className="container">
-			<h1>UPBEAT</h1>
-			<div className="playerBox">
-				<div className="player">
-					<div className="label">Player1</div>
-					<input
-						type="text"
-						className="input-name"
-						placeholder="Enter your name"
-						onChange={(e) => setNameP1(e.target.value)}
-						value={nameP1}
-					/>
-					<button
-						className="ready-btn"
-						onClick={() => updateReadyP1()}
-						style={{ backgroundColor: readyP1 ? "green" : "red" }}
-					>
-						{readyP1 ? "Ready" : "Not Ready"}
-					</button>
-				</div>
-				<div className="player">
-					<div className="label">Player2</div>
-					<input
-						type="text"
-						className="input-name"
-						placeholder="Enter your name"
-						onChange={(e) => setNameP2(e.target.value)}
-						value={nameP2}
-					/>
-					<button
-						className="ready-btn"
-						onClick={() => updateReadyP2()}
-						style={{ backgroundColor: readyP2 ? "green" : "red" }}
-					>
-						{readyP2 ? "Ready" : "Not Ready"}{" "}
-					</button>
-				</div>
-			</div>
-			<button className="start-btn" onClick={() => start()}>
-				{readyP2 && readyP1 ? "Start" : "Wait for start"}
-			</button>
-			<span className="credit">© 2023 Our Group. All rights reserved.</span>
-		</div>
-	);
+    const updateReadyP2 = () => {
+        if (nameP2.length === 0) {
+            alert("Please enter your name at Player2");
+        } else {
+            // setReadyP2(!readyP2);
+            stompClient.current.send("/app/ready/changeReady", {}, JSON.stringify({
+                readyP1: readyP1,
+                readyP2: !readyP2
+            }));
+            console.log("player2 ready: " + readyP2)
+        }
+    };
+
+    const router = useRouter();
+
+    const start = () => {
+        if (readyP1 && readyP2) {
+            router.push("/game");
+        } else {
+            return;
+        }
+    };
+    return (
+        <div className="container">
+            <h1>UPBEAT</h1>
+            <div className="playerBox">
+                <div className="player">
+                    <div className="label">Player1</div>
+                    <input
+                        type="text"
+                        className="input-name"
+                        placeholder="Enter your name"
+                        onChange={(e) => nameChangeP1(e.target.value)
+                        }
+                        value={nameP1}
+                    />
+                    <button
+                        className="ready-btn"
+                        onClick={() => updateReadyP1()}
+                        style={{backgroundColor: readyP1 ? "green" : "red"}}
+                    >
+                        {readyP1 ? "Ready" : "Not Ready"}
+                    </button>
+                </div>
+                <div className="player">
+                    <div className="label">Player2</div>
+                    <input
+                        type="text"
+                        className="input-name"
+                        placeholder="Enter your name"
+                        onChange={(e) => nameChangeP2(e.target.value)}
+                        value={nameP2}
+                    />
+                    <button
+                        className="ready-btn"
+                        onClick={() => updateReadyP2()}
+                        style={{backgroundColor: readyP2 ? "green" : "red"}}
+                    >
+                        {readyP2 ? "Ready" : "Not Ready"}{" "}
+                    </button>
+                </div>
+            </div>
+            <button className="start-btn" onClick={() => start()}>
+                {readyP2 && readyP1 ? "Start" : "Wait for start"}
+            </button>
+            <span className="credit">© 2023 Our Group. All rights reserved.</span>
+        </div>
+    );
 }
