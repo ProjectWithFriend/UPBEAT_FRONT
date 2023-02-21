@@ -23,6 +23,10 @@ function Hexagon(props) {
 			1 + 0.14 * Math.tanh(t * Math.PI)
 		);
 	}, [t]);
+	const {
+		camera,
+		gl: { domElement },
+	} = useThree();
 	return (
 		<mesh
 			ref={ref}
@@ -33,7 +37,11 @@ function Hexagon(props) {
 			onPointerOut={() => {
 				hover(false);
 			}}
-			onClick={() => console.log(props.name)}
+			onClick={() => {
+				console.log(props.name);
+				console.log(camera.position);
+				// console.log(camera.rotation);
+			}}
 		>
 			<cylinderGeometry args={[0.5, 0.5, 0.05, 6]} />
 			<meshStandardMaterial color={hovered ? "red" : "white"} />
@@ -76,7 +84,7 @@ const CameraControls = () => {
 
 export default function () {
 	return (
-		<Canvas camera={{ fov: 10, near: 1, far: 1000, position: [0, 40, 0] }}>
+		<Canvas camera={{ fov: 15, near: 1, far: 1000, position: [33, 33, 45] }}>
 			<CameraControls />
 			<ambientLight />
 			<pointLight position={[10, 10, 10]} />

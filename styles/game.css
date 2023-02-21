@@ -79,3 +79,16 @@ p {
     /* align-items: center; */
     width: 100px;
 }
+
+.submit-code {
+    position: relative;
+    background-color: #f39c12;
+    border: none;
+    padding: 8px 10px;
+    text-align: center;
+    -webkit-transition-duration: 0.4s;
+    /* Safari */
+    transition-duration: 0.4s;
+    text-decoration: none;
+    overflow: hidden;
+}

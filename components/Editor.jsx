@@ -8,8 +8,11 @@ export default function Editor() {
 	return (
 		<div style={{ position: "relative" }}>
 			<div className="code" theme={gruvboxDark}>
-				<p style={{ padding: "7px" }}>Code Here</p>
-				<button style={{ position: "absolute", top: 10, right: 10 }}>
+				<p style={{ padding: "10px", color: "white" }}>Code Here</p>
+				<button
+					className="submit-code"
+					style={{ position: "absolute", top: 10, right: 10 }}
+				>
 					Submit
 				</button>
 			</div>
