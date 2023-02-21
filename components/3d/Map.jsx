@@ -8,43 +8,46 @@ function Hexagon(props) {
 	const [t, setT] = useState(0);
 	useFrame((state, delta) => {
 		if (hovered) {
-			if (t < 0) setT(0)
+			if (t < 0) setT(0);
 			else setT(t + delta);
 		} else {
 			if (t > Math.PI) setT(Math.PI);
 			else setT(t - delta);
 		}
-	})
+	});
 	useEffect(() => {
 		const object = ref.current;
 		object.position.y = Math.max(1, 1 + 0.1 * Math.tanh(t * Math.PI));
-		object.scale.x = object.scale.z = Math.max(1, 1 + 0.14 * Math.tanh(t * Math.PI));
-	},[t])
+		object.scale.x = object.scale.z = Math.max(
+			1,
+			1 + 0.14 * Math.tanh(t * Math.PI)
+		);
+	}, [t]);
 	return (
 		<mesh
 			ref={ref}
 			{...props}
 			onPointerOver={() => {
-				hover(true)
+				hover(true);
 			}}
 			onPointerOut={() => {
-				hover(false)
+				hover(false);
 			}}
 			onClick={() => console.log(props.name)}
 		>
 			<cylinderGeometry args={[0.5, 0.5, 0.05, 6]} />
-			<meshStandardMaterial color={hovered ? 'red' : 'white'} />
+			<meshStandardMaterial color={hovered ? "red" : "white"} />
 		</mesh>
-	)
+	);
 }
 
 function Grid({ rows, cols, ...props }) {
-	const hexagons = []
+	const hexagons = [];
 	for (let row = 0; row < rows; row++) {
 		for (let col = 0; col < cols; col++) {
-			const X = row - 0.1 * row
-			const Z = col + (row % 2 == 0 ? 0.5 : 0)
-			const name = `hex-${col * rows + row}`
+			const X = row - 0.1 * row;
+			const Z = col + (row % 2 == 0 ? 0.5 : 0);
+			const name = `hex-${col * rows + row}`;
 			hexagons.push(
 				<Hexagon
 					{...props}
@@ -53,13 +56,13 @@ function Grid({ rows, cols, ...props }) {
 					position={[X, 1, Z]}
 					rotation-y={0.5 * Math.PI}
 				/>
-			)
+			);
 		}
 	}
-	return hexagons
+	return hexagons;
 }
 
-extend({ OrbitControls })
+extend({ OrbitControls });
 const CameraControls = () => {
 	const {
 		camera,
@@ -80,4 +83,4 @@ export default function () {
 			<Grid rows={10} cols={10} />
 		</Canvas>
 	);
-};
+}
