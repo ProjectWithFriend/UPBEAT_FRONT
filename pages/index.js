@@ -8,25 +8,28 @@ export default function Home() {
     const [nameP2, setNameP2] = useState("");
     const [readyP1, setReadyP1] = useState(false);
     const [readyP2, setReadyP2] = useState(false);
-	const stompClient = useRef(null);
+    const stompClient = useRef(null);
     useEffect(() => {
         const socket = new SockJS("http://localhost:8080/ws");
-		let client = over(socket);
+        let client = over(socket);
         client.connect({}, () => {
             stompClient.current = client;
-			stompClient.current.subscribe("/topic/name", (data) => {
+            stompClient.current.subscribe("/topic/name", (data) => {
                 console.log("Received data from server: " + data.body)
-				data = JSON.parse(data.body);
-				setNameP1(data.nameP1);
-				setNameP2(data.nameP2);
-			});
+                data = JSON.parse(data.body);
+                setNameP1(data.nameP1);
+                setNameP2(data.nameP2);
+            });
             stompClient.current.subscribe("/topic/ready", (data) => {
                 console.log("Received data from server: " + data.body)
                 data = JSON.parse(data.body);
                 setReadyP1(data.readyP1);
                 setReadyP2(data.readyP2);
             });
-		});
+            stompClient.current.subscribe("/topic/gameStart", (data) => {
+                router.push("/game");
+            });
+        });
     }, []);
 
     const nameChangeP1 = (name) => {
@@ -75,11 +78,30 @@ export default function Home() {
 
     const start = () => {
         if (readyP1 && readyP2) {
-            router.push("/game");
+            // router.push("/game");
+            stompClient.current.send("/app/ready/start", {}, JSON.stringify({}));
         } else {
             return;
         }
     };
+
+    // To Block player can't enter name after ready
+    useEffect(() => {
+        if (readyP1) {
+            document.querySelector(".input-name-1").disabled = true;
+        }else{
+            document.querySelector(".input-name-1").disabled = false;
+        }
+    }, [readyP1])
+
+    useEffect(() => {
+        if (readyP2) {
+            document.querySelector(".input-name-2").disabled = true;
+        } else {
+            document.querySelector(".input-name-2").disabled = false;
+        }
+    }, [readyP2])
+
     return (
         <div className="container">
             <h1>UPBEAT</h1>
@@ -88,7 +110,7 @@ export default function Home() {
                     <div className="label">Player1</div>
                     <input
                         type="text"
-                        className="input-name"
+                        className="input-name-1"
                         placeholder="Enter your name"
                         onChange={(e) => nameChangeP1(e.target.value)
                         }
@@ -106,7 +128,7 @@ export default function Home() {
                     <div className="label">Player2</div>
                     <input
                         type="text"
-                        className="input-name"
+                        className="input-name-2"
                         placeholder="Enter your name"
                         onChange={(e) => nameChangeP2(e.target.value)}
                         value={nameP2}
