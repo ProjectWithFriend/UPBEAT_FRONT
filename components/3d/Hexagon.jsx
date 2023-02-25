@@ -1,7 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 
-export default function(props) {
+export default function Hexagon(props) {
 	const ref = useRef();
 	const [hovered, hover] = useState(false);
 	const [t, setT] = useState(0);
@@ -43,7 +43,7 @@ export default function(props) {
 			}}
 		>
 			<cylinderGeometry args={[0.5, 0.5, 0.05, 6]} />
-			<meshStandardMaterial color={hovered ? "red" : "white"} />
+			<meshStandardMaterial color={props.name == 'hex-6' ? "red" : "white"} />
 		</mesh>
 	);
 }
