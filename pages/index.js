@@ -12,22 +12,23 @@ export default function Home() {
 	useEffect(() => {
 		const socket = new SockJS("http://localhost:8080/ws");
 		let client = over(socket);
+		client.debug = null;
 		client.connect({}, () => {
 			stompClient.current = client;
 			stompClient.current.subscribe("/topic/name", (data) => {
-				console.log("Received data from server: " + data.body);
+				// console.log("Received data from server: " + data.body);
 				data = JSON.parse(data.body);
 				setNameP1(data.nameP1);
 				setNameP2(data.nameP2);
 			});
 			stompClient.current.subscribe("/topic/ready", (data) => {
-				console.log("Received data from server: " + data.body);
+				// console.log("Received data from server: " + data.body);
 				data = JSON.parse(data.body);
 				setReadyP1(data.readyP1);
 				setReadyP2(data.readyP2);
 			});
 			stompClient.current.subscribe("/topic/gameStart", (data) => {
-				// router.push("/game");
+				router.push("/game");
 			});
 		});
 	}, []);
@@ -69,7 +70,7 @@ export default function Home() {
 					readyP2: readyP2,
 				})
 			);
-			console.log("player1 ready: " + readyP1);
+			// console.log("player1 ready: " + readyP1);
 		}
 	};
 
@@ -86,7 +87,7 @@ export default function Home() {
 					readyP2: !readyP2,
 				})
 			);
-			console.log("player2 ready: " + readyP2);
+			// console.log("player2 ready: " + readyP2);
 		}
 	};
 
