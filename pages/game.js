@@ -32,11 +32,11 @@ export default function Game() {
             </div>
             <div className="status-container">
                 <div className="player1">
-                    <h3>{player1.name} | {player1.player_id}</h3>
+                    <h3>{player1.name} | {player1.id}</h3>
                     <p>money : {player1.budget}</p>
                 </div>
                 <div className="player2">
-                    <h3>{player2.name} | {player2.player_id}</h3>
+                    <h3>{player2.name} | {player2.id}</h3>
                     <p>money : {player2.budget}</p>
                 </div>
                 <div className="roundTime">
