@@ -27,7 +27,19 @@ export default function Home() {
 				setReadyP1(data.readyP1);
 				setReadyP2(data.readyP2);
 			});
-			stompClient.current.subscribe("/topic/gameStart", (data) => {
+			stompClient.current.subscribe("/topic/gameStart", async (data) => {
+				try {
+					const res = await axios.post(
+						"http://localhost:8080/api/createGameMock"
+					);
+					const data = res.data;
+					localStorage.setItem("init_territory", JSON.stringify(data.territory));
+					localStorage.setItem("init_player1", JSON.stringify(data.player1));
+					localStorage.setItem("init_player2", JSON.stringify(data.player2));
+				} catch (error) {
+					console.log(error);
+				}
+
 				router.push("/game");
 			});
 		});
@@ -96,18 +108,6 @@ export default function Home() {
 	const start = async () => {
 		//get api from server
 		if (readyP1 && readyP2) {
-			try {
-				const res = await axios.post(
-					"http://localhost:8080/api/createGameMock"
-				);
-				const data = res.data;
-				localStorage.setItem("init_territory", JSON.stringify(data.territory));
-				localStorage.setItem("init_player1", JSON.stringify(data.player1));
-				localStorage.setItem("init_player2", JSON.stringify(data.player2));
-			} catch (error) {
-				console.log(error);
-			}
-
 			stompClient.current.send("/app/ready/start", {}, JSON.stringify({}));
 		} else {
 			return;
