@@ -3,12 +3,7 @@ import Editor from "../components/Editor";
 import HexGridDemo from "../components/Grid";
 import axios from "axios";
 import Map from "../components/3d/Map";
-import {
-	Icon24Hours,
-	IconArrowsDiagonal,
-	IconZoomIn,
-	IconZoomOut,
-} from "@tabler/icons-react";
+import { IconZoomIn, IconZoomOut } from "@tabler/icons-react";
 import { escape } from "lodash";
 
 export default function Game() {
@@ -56,11 +51,14 @@ export default function Game() {
 		}
 	};
 
+	const handleFullscreenChange = () => {
+		setIsFullScreen(!!document.fullscreenElement);
+	};
+
 	const handleKeyUp = (e) => {
 		//if esc key is pressed then exit full screen and set full screen to false
 		//&& isFullScreen
-		if (e.keyCode === 27 && isFullScreen) {
-			console.log(isFullScreen);
+		if (e.keyCode === 27 && document.fullscreenElement) {
 			document.exitFullscreen();
 			setIsFullScreen(false);
 		}
@@ -73,13 +71,25 @@ export default function Game() {
 		setPlayer2(JSON.parse(localStorage.getItem("init_player2")));
 
 		// add event listener for "Esc" key
-		window.addEventListener("keyup", handleKeyUp);
+		window.addEventListener("keyup", (e) => {
+			if (document.fullscreenElement) {
+				document.exitFullscreen();
+			}
+		});
 
-		// cleanup function to remove the event listener
+		// add event listener for fullscreenchange
+		document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+		// cleanup function to remove the event listeners
 		return () => {
-			window.removeEventListener("keyup", handleKeyUp);
+			window.removeEventListener("keyup", (e) => {
+				if (e.keyCode === 27 && isFullScreen) {
+					document.exitFullscreen();
+				}
+			});
+			document.removeEventListener("fullscreenchange", handleFullscreenChange);
 		};
-	}, []);
+	}, [isFullScreen]);
 	return (
 		<div className="container">
 			<div className="main-container">
@@ -89,7 +99,7 @@ export default function Game() {
 						className="boom"
 						onMouseOut={unglow}
 						onMouseOver={glow}
-						onKeyUp={(e) => handleKeyUp(e)}
+						onKeyUp={handleClick}
 					>
 						{isFullScreen ? (
 							<IconZoomOut onClick={handleClick} />
