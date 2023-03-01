@@ -15,15 +15,18 @@
     "@uiw/codemirror-theme-gruvbox-dark": "^4.19.9",
     "@uiw/react-codemirror": "^4.19.9",
     "axios": "^1.3.3",
+    "install": "^0.13.0",
     "lodash": "^4.17.21",
     "net": "^1.0.2",
     "next": "13.1.6",
+    "npm": "^9.5.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hexagon": "1.1.3",
     "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",
-    "three": "^0.149.0",
-    "react-hexagon": "1.1.3"
+    "sweetalert2": "^11.7.3",
+    "three": "^0.149.0"
   },
   "devDependencies": {
     "eslint": "8.34.0",

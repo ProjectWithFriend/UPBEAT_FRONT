@@ -1,60 +1,70 @@
 import {useRouter} from "next/router";
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {over} from "stompjs";
 import SockJS from "sockjs-client";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function Home() {
     const [nameP1, setNameP1] = useState("");
     const [nameP2, setNameP2] = useState("");
     const [readyP1, setReadyP1] = useState(false);
     const [readyP2, setReadyP2] = useState(false);
+    const [playerSlot, setPlayerSlot] = useState(0);
     const stompClient = useRef(null);
+    const fixUseEffect = useRef(false);
+    const router = useRouter();
+
+
     useEffect(() => {
-        const socket = new SockJS("http://localhost:8080/ws");
-        let client = over(socket);
-        client.debug = null;
-        client.connect({}, () => {
-            stompClient.current = client;
-            stompClient.current.subscribe("/topic/name", (data) => {
-                // console.log("Received data from server: " + data.body);
-                data = JSON.parse(data.body);
-                // if(data.nameP1 !== nameP1) setNameP1(data.nameP1);
-                // if(data.nameP2 !== nameP2) setNameP2(data.nameP2);
-                setNameP1(data.nameP1);
-                setNameP2(data.nameP2);
-                localStorage.setItem("nameP1", data.nameP1);
-                localStorage.setItem("nameP2", data.nameP2);
-            });
-            stompClient.current.subscribe("/topic/ready", (data) => {
-                // console.log("Received data from server: " + data.body);
-                data = JSON.parse(data.body);
-                setReadyP1(data.readyP1);
-                setReadyP2(data.readyP2);
-            });
-            stompClient.current.subscribe("/topic/gameStart", async (data) => {
-                try {
-                    const body = {
-                        player_1_name: localStorage.getItem("nameP1"),
-                        player_2_name: localStorage.getItem("nameP2"),
+        if (fixUseEffect.current === false) {
+            const socket = new SockJS(`http://${document.domain}:8080/ws`);
+            let client = over(socket);
+            client.debug = (str) => {
+                console.log(str)
+            };
+            client.connect({}, () => {
+                stompClient.current = client;
+                stompClient.current.subscribe(`/user/topic/playerSlot`, (data) => {
+                    data = JSON.parse(data.body);
+                    setPlayerSlot(data.playerSlot)
+                });
+                stompClient.current.subscribe("/topic/name", (data) => {
+                    data = JSON.parse(data.body);
+                    setNameP1(data.nameP1);
+                    setNameP2(data.nameP2);
+                    localStorage.setItem("nameP1", data.nameP1);
+                    localStorage.setItem("nameP2", data.nameP2);
+                    setReadyP1(data.nameP1 !== "");
+                    setReadyP2(data.nameP2 !== "");
+                });
+                stompClient.current.subscribe("/topic/gameStart", async () => {
+                    try {
+                        const body = {
+                            player_1_name: localStorage.getItem("nameP1"),
+                            player_2_name: localStorage.getItem("nameP2"),
+                        }
+                        const res = await axios.post(
+                            "http://localhost:8080/api/createGame"
+                            , body
+                        );
+                        const data = res.data;
+                        localStorage.setItem("init_territory", JSON.stringify(data.territory));
+                        localStorage.setItem("init_player1", JSON.stringify(data.player1));
+                        localStorage.setItem("init_player2", JSON.stringify(data.player2));
+                    } catch (error) {
+                        console.log(error);
                     }
-                    const res = await axios.post(
-                        "http://localhost:8080/api/createGame"
-                        , body
-                    );
-                    const data = res.data;
-                    localStorage.setItem("init_territory", JSON.stringify(data.territory));
-                    localStorage.setItem("init_player1", JSON.stringify(data.player1));
-                    localStorage.setItem("init_player2", JSON.stringify(data.player2));
-                } catch (error) {
-                    console.log(error);
-                }
-
-                router.push("/game");
+                    await router.push("/game");
+                });
+                stompClient.current.send("/app/ready/lockPlayerSlot", {}, JSON.stringify());
             });
-        });
-    }, []);
 
+            return () => {
+                fixUseEffect.current = true;
+            }
+        }
+    }, []);
     const nameChangeP1 = (name) => {
         setNameP1(name);
         stompClient.current.send(
@@ -66,7 +76,6 @@ export default function Home() {
             })
         );
     };
-
     const nameChangeP2 = (name) => {
         setNameP2(name);
         stompClient.current.send(
@@ -78,83 +87,77 @@ export default function Home() {
             })
         );
     };
-    //Client state
-    const updateReadyP1 = () => {
-        if (nameP1.length === 0) {
-            alert("Please enter your name at Player1");
-        } else {
-            // setReadyP1(!readyP1);
-            stompClient.current.send(
-                "/app/ready/changeReady",
-                {},
-                JSON.stringify({
-                    readyP1: !readyP1,
-                    readyP2: readyP2,
-                })
-            );
-            // console.log("player1 ready: " + readyP1);
-        }
-    };
-
-    const updateReadyP2 = () => {
-        if (nameP2.length === 0) {
-            alert("Please enter your name at Player2");
-        } else {
-            // setReadyP2(!readyP2);
-            stompClient.current.send(
-                "/app/ready/changeReady",
-                {},
-                JSON.stringify({
-                    readyP1: readyP1,
-                    readyP2: !readyP2,
-                })
-            );
-            // console.log("player2 ready: " + readyP2);
-        }
-    };
-
-    const router = useRouter();
-
-    const start = async () => {
+    const start = () => {
         //get api from server
         if (readyP1 && readyP2) {
-            stompClient.current.send("/app/ready/start", {}, JSON.stringify({
-                nameP1: nameP1,
-                nameP2: nameP2
-            }));
-        } else {
-            return;
+            stompClient.current.send("/app/ready/start", {}, JSON.stringify({}));
         }
     };
 
-    // To Block player can't enter name after ready
+    //make sweetalert when click player-1 or player-2
+    const sweetAlert1 = () => {
+        if (playerSlot === 2) {
+            Swal.fire({
+                title: "You are player 2",
+                text: "You can't change your name of player 2",
+                icon: "error",
+                confirmButtonText: "OK"
+            })
+        }
+    }
+
+    const sweetAlert2 = () => {
+        if (playerSlot === 1) {
+            Swal.fire({
+                title: "You are player 1",
+                text: "You can't change your name of player 1",
+                icon: "error",
+                confirmButtonText: "OK"
+            })
+        }
+    }
+
+
     useEffect(() => {
-        if (readyP1) {
-            document.querySelector(".input-name-1").disabled = true;
-        } else {
+        if (playerSlot === 1) {
             document.querySelector(".input-name-1").disabled = false;
-        }
-    }, [readyP1]);
-
-    useEffect(() => {
-        if (readyP2) {
             document.querySelector(".input-name-2").disabled = true;
-        } else {
+            //decorate label-p1
+            document.querySelector(".label-p1").style.color = "green";
+            document.querySelector(".label-p1").style.fontWeight = "bold";
+            //decorate label-p2
+            document.querySelector(".label-p2").style.color = "red";
+            document.querySelector(".label-p2").style.fontWeight = "bold";
+            //decorate player-1
+            document.querySelector(".player-1").style.border = "2px solid green";
+            //decorate player-2
+            document.querySelector(".player-2").style.border = "2px solid red";
+            //change placeholder input-name-2
+            document.querySelector(".input-name-2").placeholder = "Your opponent name";
+        } else if (playerSlot === 2) {
+            document.querySelector(".input-name-1").disabled = true;
             document.querySelector(".input-name-2").disabled = false;
+            //decorate label-p1
+            document.querySelector(".label-p1").style.color = "red";
+            document.querySelector(".label-p1").style.fontWeight = "bold";
+            //decorate label-p2
+            document.querySelector(".label-p2").style.color = "green";
+            document.querySelector(".label-p2").style.fontWeight = "bold";
+            //decorate player-1
+            document.querySelector(".player-1").style.border = "2px solid red";
+            //decorate player-2
+            document.querySelector(".player-2").style.border = "2px solid green";
+            //change placeholder input-name-1
+            document.querySelector(".input-name-1").placeholder = "Your opponent name";
         }
-    }, [readyP2]);
-
-    //To clear local storage when come to web in first time
-    useEffect(() => {
-        localStorage.clear();
-    },[])
+    }, [playerSlot])
 
     return (
-        <div className="container">
+        <div className="container main-layout" >
             <h1>UPBEAT</h1>
             <div className="playerBox">
-                <div className="player">
-                    <div className="label">Player1</div>
+                <div className="player player-1" onClick={() => sweetAlert1()}>
+                    <div className="label label-p1">{playerSlot === 1 ? "You are player 1" : "Your Opponent"}</div>
                     <input
                         type="text"
                         className="input-name-1"
@@ -164,14 +167,14 @@ export default function Home() {
                     />
                     <button
                         className="ready-btn"
-                        onClick={() => updateReadyP1()}
-                        style={{backgroundColor: readyP1 ? "green" : "red"}}
+                        disabled={nameP1 !== ""}
+                        style={{backgroundColor: nameP1 ? "green" : "red"}}
                     >
                         {readyP1 ? "Ready" : "Not Ready"}
                     </button>
                 </div>
-                <div className="player">
-                    <div className="label">Player2</div>
+                <div className="player player-2" onClick={() => sweetAlert2()}>
+                    <div className="label label-p2">{playerSlot === 2 ? "You are player 2" : "Your Opponent"}</div>
                     <input
                         type="text"
                         className="input-name-2"
@@ -181,8 +184,8 @@ export default function Home() {
                     />
                     <button
                         className="ready-btn"
-                        onClick={() => updateReadyP2()}
-                        style={{backgroundColor: readyP2 ? "green" : "red"}}
+                        disabled={nameP2 !== ""}
+                        style={{backgroundColor: nameP2 ? "green" : "red"}}
                     >
                         {readyP2 ? "Ready" : "Not Ready"}{" "}
                     </button>
