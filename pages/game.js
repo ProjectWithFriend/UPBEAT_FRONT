@@ -3,7 +3,12 @@ import Editor from "../components/Editor";
 import HexGridDemo from "../components/Grid";
 import axios from "axios";
 import Map from "../components/3d/Map";
-import { IconZoomIn, IconZoomOut } from "@tabler/icons-react";
+import {
+	IconZoomIn,
+	IconZoomOut,
+	IconArrowsDiagonal,
+	IconX,
+} from "@tabler/icons-react";
 import { escape } from "lodash";
 
 export default function Game() {
@@ -102,9 +107,9 @@ export default function Game() {
 						onKeyUp={handleClick}
 					>
 						{isFullScreen ? (
-							<IconZoomOut onClick={handleClick} />
+							<IconX onClick={handleClick} />
 						) : (
-							<IconZoomIn onClick={handleClick} />
+							<IconArrowsDiagonal onClick={handleClick} />
 						)}
 					</div>
 				</div>

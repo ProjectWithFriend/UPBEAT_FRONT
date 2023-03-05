@@ -7,17 +7,17 @@ import React, { useCallback, useState } from "react";
 export default function Editor() {
 	const [code, setCode] = useState();
 	const onChange = useCallback((value, _) => {
-		setCode(value)
-	})
+		setCode(value);
+	});
 	return (
 		<div style={{ position: "relative" }}>
 			<div className="code" theme={gruvboxDark}>
-				<p style={{ padding: "10px", color: "white" }}>Code Here</p>
+				<p style={{ padding: "10px", color: "white", top: 20 }}>Code Here</p>
 				<button
-					className="submit-code"
+					className="btn btn-warning"
 					style={{ position: "absolute", top: 10, right: 10 }}
-					onClick={() => console.log(code)}
 				>
+					{" "}
 					Submit
 				</button>
 			</div>
