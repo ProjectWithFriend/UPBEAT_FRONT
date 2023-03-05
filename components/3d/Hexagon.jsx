@@ -18,7 +18,7 @@ function BaseHexagon(props) {
 		}
 		setObjects(contents);
 	}, [])
-	const colorMap = useLoader(TextureLoader, 'textures/SO4M8W0.png')
+	const colorMap = useLoader(TextureLoader, 'textures/cgshare-book-grass-003.jpg')
 	return (
 		<>
 			<cylinderGeometry args={[props.radius - props.spacing / 2, props.radius - props.spacing / 2, 0.05, 6]} />
