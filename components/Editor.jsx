@@ -10,23 +10,24 @@ export default function Editor() {
 		setCode(value);
 	});
 	return (
-		<div style={{ position: "relative" }}>
-			<div className="code" theme={gruvboxDark}>
+		<div className="editorMain">
+			<div className="code">
 				<p style={{ padding: "10px", color: "white", top: 20 }}>Code Here</p>
 				<button
 					className="btn btn-warning"
 					style={{ position: "absolute", top: 10, right: 10 }}
 				>
-					{" "}
 					Submit
 				</button>
 			</div>
-			<CodeMirror
-				onChange={onChange}
-				height="600px"
-				theme={gruvboxDark}
-				extensions={[javascript({ jsx: true })]}
-			/>
+			<div>
+				<CodeMirror
+					onChange={onChange}
+					height="525px"
+					theme={gruvboxDark}
+					extensions={[javascript({ jsx: true })]}
+				/>
+			</div>
 		</div>
 	);
 }

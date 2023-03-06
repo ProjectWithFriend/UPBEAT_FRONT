@@ -5,6 +5,11 @@
 
 }
 
+.editorMain {
+    height: 600px;
+    background-color: #282828;
+}
+
 .code {
     background-color: #282828;
     font-size: 1.2rem;
@@ -60,24 +65,6 @@
     overflow: hidden;
 }
 
-.status-container {
-    max-width: 1440px;
-    max-width: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f2f2f2;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-.player1, .player2 {
-    width: 500px;
-    display: flex;
-    flex-direction: column;
-    /*align-items: center;*/
-}
 
 h3 {
     font-size: 24px;
@@ -87,32 +74,17 @@ h3 {
 }
 
 p {
-    font-size: 18px;
     color: #666;
 }
 
-.roundTime {
-    display: flex;
-    /* flex-direction: column; */
-    justify-content: center;
-    /* align-items: center; */
-    width: 100px;
-}
 
 .submit-code {
     /*style 1*/
     position: relative;
-    background-color: #00bd68;
     border: none;
     padding: 8px 10px;
     text-align: center;
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
-    text-decoration: none;
-    overflow: hidden;
-    /* Safari */
 
-    /*style 2*/
 }
 
 
@@ -130,4 +102,63 @@ p {
 
 .boom svg:hover {
     box-shadow: #e5d772;
+}
+
+.status-container {
+    /* border: 1px solid red; */
+    height: 100px;
+    margin: 20px;
+    width: 1250px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.player-status {
+    /* border: 1px solid blue; */
+    width: 900px;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.player1 {
+    border: 1px solid violet;
+    width: 400px;
+
+}
+
+.player2 {
+    border: 1px solid brown;
+    width: 400px;
+}
+
+.st {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.25rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s ease-in-out;
+
+
+}
+
+.st:hover {
+    transform: scale(1.01);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.roundTime {
+    border: 1px solid green;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    padding: 0.25rem;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+
+
 }
