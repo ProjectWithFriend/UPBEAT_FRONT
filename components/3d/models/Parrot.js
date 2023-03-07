@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from 'react'
-import { useGLTF, useAnimations } from '@react-three/drei'
+import React, { useEffect, useRef } from "react";
+import { useGLTF, useAnimations } from "@react-three/drei";
 
 export default function Parrot(props) {
     const group = useRef();
-    const { nodes, materials, animations } = useGLTF("./Parrot.glb");
+    const { nodes, materials, animations } = useGLTF("/models/Parrot.glb");
     const { ref, actions, names } = useAnimations(animations, group);
     useEffect(() => {
         actions[names[0]].play();
@@ -25,4 +25,4 @@ export default function Parrot(props) {
     );
 }
 
-useGLTF.preload("./Parrot.glb")
+useGLTF.preload("/models/Parrot.glb")

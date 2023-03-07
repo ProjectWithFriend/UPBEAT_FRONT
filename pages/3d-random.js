@@ -1,8 +1,9 @@
 import React from "react";
-import RegionTile from "../components/3d/RegionTile";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
+import { Hexagon } from "../components/3d/Hexagon";
+import { Example } from "../components/3d/models/Example";
 
 extend({ OrbitControls });
 const CameraControls = () => {
@@ -23,7 +24,7 @@ export default function RandomTiles() {
                 <CameraControls />
                 <ambientLight />
                 <pointLight position={[10, 10, 10]} />
-                <RegionTile />
+                <Hexagon radius={1} spacing={0} position={[0, 0, 0]}/>  
             </Canvas>
         </div>
     );
