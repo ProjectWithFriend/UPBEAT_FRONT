@@ -22,6 +22,7 @@ const CameraControls = () => {
 		maxDistance={150}
 		minPolarAngle={Math.PI / 4}
 		maxPolarAngle={Math.PI / 3}
+		se
 	/>;
 };
 
@@ -2785,7 +2786,7 @@ export default function World() {
 			<CameraControls />
 			<Environment dayColor={'#ffffff'} nightColor={'#362E32'} />
 			<GridFromTerritory territory={territory} receiveShadow castShadow />
-			{/* <Parrot scale={[0.05, 0.05, 0.05]} position={[0, 3, 0]} /> */}
+			<Parrot scale={[0.05, 0.05, 0.05]} position={[0, 3, 0]} />
 		</Canvas>
 	);
 }
