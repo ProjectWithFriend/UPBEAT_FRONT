@@ -90,6 +90,5 @@ export default function GridFromTerritory({ territory, ...props }) {
 	props.worldSize = 100;
 	return <>
 		{functionalGrid(territory, props)}
-		{/* {worldGrid(territory, props)} */}
 	</>
 }

@@ -12,18 +12,18 @@ import {
 import { escape } from "lodash";
 
 export default function Game() {
-	const [player1, setPlayer1] = useState({
+	const player1={
 		name: "Test1",
 		budget: 1000,
 		player_id: 1,
 		cityCenter: [0, 0],
-	});
-	const [player2, setPlayer2] = useState({
+	};
+	const player2={
 		name: "Test2",
 		budget: 1000,
 		player_id: 2,
 		cityCenter: [3, 3],
-	});
+	};
 
 	const glow = () => {
 		document.querySelector(".boom").style.color = "#e5d772";
@@ -72,8 +72,6 @@ export default function Game() {
 	useEffect(() => {
 		//wait for local storage to be set
 		setTimeout(() => {}, 100);
-		setPlayer1(JSON.parse(localStorage.getItem("init_player1")));
-		setPlayer2(JSON.parse(localStorage.getItem("init_player2")));
 
 		// add event listener for "Esc" key
 		window.addEventListener("keyup", (e) => {

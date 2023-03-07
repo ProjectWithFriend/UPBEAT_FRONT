@@ -19,7 +19,7 @@ function BaseHexagon(props) {
 		}
 		setObjects(contents);
 	}, []);
-	const colorMap = useLoader(TextureLoader, "territories/grassDemo.jpg");
+	const colorMap = useLoader(TextureLoader, "textures/SO4M8W0.png");
 	return (
 		<>
 			<cylinderGeometry
