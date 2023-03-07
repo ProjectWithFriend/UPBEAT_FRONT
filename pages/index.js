@@ -17,8 +17,9 @@ export default function Home() {
 
 
     useEffect(() => {
+        const host = 'localhost';
         if (fixUseEffect.current === false) {
-            const socket = new SockJS(`http://${document.domain}:8080/ws`);
+            const socket = new SockJS(`http://${host}:8080/ws`);
             let client = over(socket);
             client.debug = (str) => {
                 console.log(str)
@@ -47,14 +48,14 @@ export default function Home() {
                         }
                         localStorage.clear();
                         const res = await axios.post(
-                            "http://localhost:8080/api/createGame"
+                            `http://${host}:8080/api/createGame`
                             , body
                         );
                         const data = res.data;
-                        localStorage.setItem("init_territory", JSON.stringify(data.territory));
+                        localStorage.setItem("territory", JSON.stringify(data.territory));
                         localStorage.setItem("init_player1", JSON.stringify(data.player1));
                         localStorage.setItem("init_player2", JSON.stringify(data.player2));
-                        localStorage.setItem("init_currentPlayer", JSON.stringify(data.currentPlayer));
+                        localStorage.setItem("current_player", JSON.stringify(data.currentPlayer));
                     } catch (error) {
                         console.log(error);
                     }
