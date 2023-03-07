@@ -1,5 +1,5 @@
 import {useRouter} from "next/router";
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {over} from "stompjs";
 import SockJS from "sockjs-client";
 import axios from "axios";
@@ -25,6 +25,7 @@ export default function Home() {
             };
             client.connect({}, () => {
                 stompClient.current = client;
+                stompClient.current.debug = null;
                 stompClient.current.subscribe(`/user/topic/playerSlot`, (data) => {
                     data = JSON.parse(data.body);
                     setPlayerSlot(data.playerSlot)
@@ -44,6 +45,7 @@ export default function Home() {
                             player_1_name: localStorage.getItem("nameP1"),
                             player_2_name: localStorage.getItem("nameP2"),
                         }
+                        localStorage.clear();
                         const res = await axios.post(
                             "http://localhost:8080/api/createGame"
                             , body
@@ -52,10 +54,11 @@ export default function Home() {
                         localStorage.setItem("init_territory", JSON.stringify(data.territory));
                         localStorage.setItem("init_player1", JSON.stringify(data.player1));
                         localStorage.setItem("init_player2", JSON.stringify(data.player2));
+                        localStorage.setItem("init_currentPlayer", JSON.stringify(data.currentPlayer));
                     } catch (error) {
                         console.log(error);
                     }
-                    await router.push("/game");
+                    router.push("/game");
                 });
                 stompClient.current.send("/app/ready/lockPlayerSlot", {}, JSON.stringify());
             });
@@ -153,7 +156,7 @@ export default function Home() {
     }, [playerSlot])
 
     return (
-        <div className="container main-layout" >
+        <div className="container main-layout">
             <h1>UPBEAT</h1>
             <div className="playerBox">
                 <div className="player player-1" onClick={() => sweetAlert1()}>
