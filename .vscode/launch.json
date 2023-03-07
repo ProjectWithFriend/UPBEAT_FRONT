@@ -1,30 +1,31 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "name": "Next.js: debug server-side",
-        "type": "node-terminal",
-        "request": "launch",
-        "command": "npm run dev"
-      },
-      {
-        "name": "Next.js: debug client-side",
-        "type": "chrome",
-        "request": "launch",
-        "userDataDir": true,
-        "url": "http://localhost:3000",
-        "webRoot": "${workspaceFolder}"
-      },
-      {
-        "name": "Next.js: debug full stack",
-        "type": "node-terminal",
-        "request": "launch",
-        "command": "npm run dev",
-        "serverReadyAction": {
-          "pattern": "started server on .+, url: (https?://.+)",
-          "uriFormat": "%s",
-          "action": "debugWithChrome"
-        }
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Next.js: debug server-side",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev"
+    },
+    {
+      "name": "Next.js: debug client-side",
+      "type": "msedge",
+      "runtimeExecutable": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge",
+      "request": "launch",
+      "userDataDir": true,
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Next.js: debug full stack",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "serverReadyAction": {
+        "pattern": "started server on .+, url: (https?://.+)",
+        "uriFormat": "%s",
+        "action": "debugWithChrome"
       }
-    ]
-  }
+    }
+  ]
+}

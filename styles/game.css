@@ -11,11 +11,18 @@
     color: #f8f8f2;
     height: 40px;
     align-items: center;
-    text-align: center;
 }
 
 .container {
-    max-width: none;
+    height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 12px;
 }
 
 .main-container {
@@ -30,6 +37,16 @@
     background-color: black;
     position: relative;
     overflow: hidden;
+}
+
+.map full-screen {
+    /* set the size of the map when in full-screen mode */
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 .editor {
@@ -56,8 +73,8 @@
 .player1, .player2 {
     width: 500px;
     display: flex;
-    /* flex-direction: column; */
-    /* align-items: center; */
+    flex-direction: column;
+    /*align-items: center;*/
 }
 
 h3 {
@@ -91,4 +108,20 @@ p {
     transition-duration: 0.4s;
     text-decoration: none;
     overflow: hidden;
+}
+
+.boom {
+    /*set icon to white color*/
+    color: #f2f2f2;
+    /*set icon size*/
+    font-size: 30px;
+    /*set icon position on the right of div*/
+    position: absolute;
+    right: 15px;
+    top: 15px;
+
+}
+
+.boom svg:hover {
+    box-shadow: #e5d772;
 }

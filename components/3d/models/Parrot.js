@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react'
-import { useGLTF, useAnimations } from '@react-three/drei'
+import React, { useEffect, useRef } from "react";
+import { useGLTF, useAnimations } from "@react-three/drei";
 
 export default function Parrot(props) {
     const group = useRef();

@@ -22,6 +22,7 @@ const CameraControls = () => {
 		maxDistance={150}
 		minPolarAngle={Math.PI / 4}
 		maxPolarAngle={Math.PI / 3}
+		se
 	/>;
 };
 
