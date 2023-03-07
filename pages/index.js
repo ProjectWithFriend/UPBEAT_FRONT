@@ -3,6 +3,7 @@ import {useEffect, useRef, useState} from "react";
 import {over} from "stompjs";
 import SockJS from "sockjs-client";
 import axios from "axios";
+import {connect, subscribe} from "../modules/WebSocket";
 import Swal from "sweetalert2";
 
 export default function Home() {
@@ -14,11 +15,11 @@ export default function Home() {
     const stompClient = useRef(null);
     const fixUseEffect = useRef(false);
     const router = useRouter();
-
-
+    let playerPage;
     useEffect(() => {
         const host = 'localhost';
         if (fixUseEffect.current === false) {
+            localStorage.clear()
             const socket = new SockJS(`http://${host}:8080/ws`);
             let client = over(socket);
             client.debug = (str) => {
@@ -30,6 +31,7 @@ export default function Home() {
                 stompClient.current.subscribe(`/user/topic/playerSlot`, (data) => {
                     data = JSON.parse(data.body);
                     setPlayerSlot(data.playerSlot)
+                    playerPage = data.playerSlot;
                 });
                 stompClient.current.subscribe("/topic/name", (data) => {
                     data = JSON.parse(data.body);
@@ -46,7 +48,6 @@ export default function Home() {
                             player_1_name: localStorage.getItem("nameP1"),
                             player_2_name: localStorage.getItem("nameP2"),
                         }
-                        localStorage.clear();
                         const res = await axios.post(
                             `http://${host}:8080/api/createGame`
                             , body
@@ -56,10 +57,12 @@ export default function Home() {
                         localStorage.setItem("init_player1", JSON.stringify(data.player1));
                         localStorage.setItem("init_player2", JSON.stringify(data.player2));
                         localStorage.setItem("current_player", JSON.stringify(data.currentPlayer));
+                        localStorage.setItem("stomp" , JSON.stringify(stompClient.current));
                     } catch (error) {
                         console.log(error);
                     }
-                    router.push("/game");
+                    stompClient.current.disconnect();
+                    router.push({pathname: "/game", query: {playerSlot: playerPage}});
                 });
                 stompClient.current.send("/app/ready/lockPlayerSlot", {}, JSON.stringify());
             });

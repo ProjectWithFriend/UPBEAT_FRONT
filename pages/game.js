@@ -2,8 +2,11 @@ import React, {useEffect, useState} from "react";
 import Editor from "../components/Editor";
 import World from "../components/3d/World";
 import {IconArrowsDiagonal, IconX,} from "@tabler/icons-react";
+import {useRouter} from "next/router";
 
 export default function Game(props) {
+    const router = useRouter();
+    let playerPage = router.query.playerSlot;
     const [player1, setPlayer1] = useState({
         name: "Test1",
         budget: 1000,
@@ -16,7 +19,7 @@ export default function Game(props) {
         id: 2,
     });
     const [territory, setTerritory] = useState([]);
-    const [currentPlayer, setCurrentPlayer] = useState(player1);
+    const [currentPlayer, setCurrentPlayer] = useState([]);
     const glow = () => {
         document.querySelector(".boom").style.color = "#e5d772";
         // document.querySelector(".boom").style.fontSize = "60px";
@@ -69,16 +72,17 @@ export default function Game(props) {
         setPlayer2(JSON.parse(localStorage.getItem("init_player2")));
         setCurrentPlayer(JSON.parse(localStorage.getItem("current_player")));
         setTerritory(JSON.parse(localStorage.getItem("territory")));
+    }, [isFullScreen]);
+
+    useEffect(() => {
         // add event listener for "Esc" key
         window.addEventListener("keyup", (e) => {
             if (document.fullscreenElement) {
                 document.exitFullscreen();
             }
-        });
-
+        }, []);
         // add event listener for fullscreenchange
         document.addEventListener("fullscreenchange", handleFullscreenChange);
-
         // cleanup function to remove the event listeners
         return () => {
             window.removeEventListener("keyup", (e) => {
@@ -88,7 +92,7 @@ export default function Game(props) {
             });
             document.removeEventListener("fullscreenchange", handleFullscreenChange);
         };
-    }, [isFullScreen]);
+    }, [isFullScreen])
     return (
         <div className="container">
             <div className="main-container">
@@ -108,7 +112,7 @@ export default function Game(props) {
                     </div>
                 </div>
                 <div className="editor">
-                    <Editor currentPlayer={currentPlayer}/>
+                    <Editor playerPage={playerPage}/>
                 </div>
             </div>
             <div className="status-container">
