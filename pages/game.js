@@ -1,10 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Editor from "../components/Editor";
 import World from "../components/3d/World";
 import {IconArrowsDiagonal, IconX,} from "@tabler/icons-react";
 import {useRouter} from "next/router";
+import {over} from "stompjs";
+import SockJS from "sockjs-client";
 
-export default function Game(props) {
+export default function Game() {
     const router = useRouter();
     let playerPage = router.query.playerSlot;
     const [player1, setPlayer1] = useState({
@@ -22,7 +24,6 @@ export default function Game(props) {
     const [currentPlayer, setCurrentPlayer] = useState([]);
     const glow = () => {
         document.querySelector(".boom").style.color = "#e5d772";
-        // document.querySelector(".boom").style.fontSize = "60px";
     };
 
     const unglow = () => {
@@ -64,15 +65,34 @@ export default function Game(props) {
         }
     };
 
+    const stompClient = useRef(null);
+    const fixUseEffect = useRef(false);
+
     useEffect(() => {
-        //wait for local storage to be set
-        setTimeout(() => {
-        }, 100);
+        //connect websocket
+        if (!fixUseEffect.current) {
+            const socket = new SockJS("http://localhost:8080/ws");
+            stompClient.current = over(socket);
+            stompClient.current.connect({}, () => {
+                stompClient.current.subscribe("/topic/gameUpdate", (data) => {
+                    data = JSON.parse(data.body);
+                    setTerritory(data.territory);
+                    setCurrentPlayer(data.currentPlayer);
+                    setPlayer1(data.player1);
+                    setPlayer2(data.player2);
+                })
+            })
+
+            return () => {
+                fixUseEffect.current = true;
+            }
+        }
+
         setPlayer1(JSON.parse(localStorage.getItem("init_player1")));
         setPlayer2(JSON.parse(localStorage.getItem("init_player2")));
         setCurrentPlayer(JSON.parse(localStorage.getItem("current_player")));
         setTerritory(JSON.parse(localStorage.getItem("territory")));
-    }, [isFullScreen]);
+    }, []);
 
     useEffect(() => {
         // add event listener for "Esc" key
@@ -93,6 +113,42 @@ export default function Game(props) {
             document.removeEventListener("fullscreenchange", handleFullscreenChange);
         };
     }, [isFullScreen])
+
+    //decorate the player when is his turn
+    const [p1Turn, setP1Turn] = useState(true)
+    const [p2Turn, setP2Turn] = useState(false)
+    useEffect(() => {
+        if (playerPage === '1') {
+            document.querySelector(`.player${playerPage}`).style.boxShadow = '0 0 10px #e5d772'
+            document.querySelector(`.player${playerPage}`).style.border = '3px solid #e5d772'
+            if(currentPlayer.id === player1.id){
+                document.querySelector(".h3-player1").style.textShadow = '0 0 10px #cc72e5'
+                document.querySelector(".h3-player1").style.color = '#000000'
+                document.querySelector(".h3-player1").innerHTML = `${player1.name} : ${player1.id} (Your Turn)`
+            }else{
+                document.querySelector(".h3-player1").style.textShadow = '0 0 0px #cc72e5'
+                document.querySelector(".h3-player1").innerHTML = `${player1.name} : ${player1.id}`
+            }
+        } else {
+            document.querySelector(`.player${playerPage}`).style.boxShadow = '0 0 10px #e5d772'
+            document.querySelector(`.player${playerPage}`).style.border = '3px solid #e5d772'
+            if(currentPlayer.id === player2.id){
+                document.querySelector(".h3-player2").style.textShadow = '0 0 10px #cc72e5'
+                document.querySelector(".h3-player2").innerHTML = `${player2.name} : ${player2.id} (Your Turn)`
+            }else{
+                document.querySelector(".h3-player2").style.textShadow = '0 0 10px #cc72e5'
+                document.querySelector(".h3-player2").innerHTML = `${player2.name} : ${player2.id}`
+            }
+        }
+    }, [currentPlayer])
+
+    const getPlayerId = (playerPage) => {
+        if (playerPage === '1') {
+            return player1.id
+        } else {
+            return player2.id
+        }
+    }
     return (
         <div className="container">
             <div className="main-container">
@@ -112,20 +168,20 @@ export default function Game(props) {
                     </div>
                 </div>
                 <div className="editor">
-                    <Editor playerPage={playerPage}/>
+                    <Editor playerPage={playerPage} currentPlayer={currentPlayer} player1={player1} player2={player2}/>
                 </div>
             </div>
             <div className="status-container">
                 <div className="player-status">
                     <div className="st player1">
-                        <h3>
+                        <h3 className="h3-player1">
                             {player1.name} : {player1.id}
                         </h3>
                         <p>money : {player1.budget}</p>
                         <p>Time left : 00 mins</p>
                     </div>
                     <div className="st player2">
-                        <h3>
+                        <h3 className="h3-player2">
                             {player2.name} : {player2.id}
                         </h3>
                         <p>money : {player2.budget}</p>
