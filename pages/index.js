@@ -3,7 +3,6 @@ import {useEffect, useRef, useState} from "react";
 import {over} from "stompjs";
 import SockJS from "sockjs-client";
 import axios from "axios";
-import {connect, subscribe} from "../modules/WebSocket";
 import Swal from "sweetalert2";
 
 export default function Home() {
@@ -17,10 +16,9 @@ export default function Home() {
     const router = useRouter();
     let playerPage;
     useEffect(() => {
-        const host = 'localhost';
         if (fixUseEffect.current === false) {
             localStorage.clear()
-            const socket = new SockJS(`http://${host}:8080/ws`);
+            const socket = new SockJS(`http://${document.domain}:8080/ws`);
             let client = over(socket);
             client.debug = (str) => {
                 console.log(str)
@@ -49,7 +47,7 @@ export default function Home() {
                             player_2_name: localStorage.getItem("nameP2"),
                         }
                         const res = await axios.post(
-                            `http://${host}:8080/api/createGame`
+                            `http://${document.domain}:8080/api/createGame`
                             , body
                         );
                         const data = res.data;
@@ -57,12 +55,12 @@ export default function Home() {
                         localStorage.setItem("init_player1", JSON.stringify(data.player1));
                         localStorage.setItem("init_player2", JSON.stringify(data.player2));
                         localStorage.setItem("current_player", JSON.stringify(data.currentPlayer));
-                        localStorage.setItem("stomp" , JSON.stringify(stompClient.current));
                     } catch (error) {
+                        localStorage.setItem("stomp" , JSON.stringify(stompClient.current));
                         console.log(error);
                     }
                     stompClient.current.disconnect();
-                    router.push({pathname: "/game", query: {playerSlot: playerPage}});
+                    await router.push({pathname: "/game", query: {playerSlot: playerPage}});
                 });
                 stompClient.current.send("/app/ready/lockPlayerSlot", {}, JSON.stringify());
             });

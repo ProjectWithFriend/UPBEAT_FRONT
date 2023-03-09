@@ -21,7 +21,7 @@ export default function Editor({playerPage , currentPlayer, player1,player2}) {
     const submitCode = async () => {
         console.log(player_id + " " + currentPlayer.id)
         try {
-            const res = await axios.post("http://localhost:8080/api/submit_plan", {
+            const res = await axios.post(`http://${document.domain}:8080/api/submit_plan`, {
                 construction_plan : code,
                 player_id : player_id
             });
