@@ -153,7 +153,7 @@ export default function Game() {
         <div className="container">
             <div className="main-container">
                 <div className={`map ${isFullScreen ? "full-screen" : ""}`}>
-                    <World territory={territory}/>
+                    <World territory={territory} player={currentPlayer} />
                     <div
                         className="boom"
                         onMouseOut={unglow}

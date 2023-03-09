@@ -37,13 +37,16 @@ const Environment = ({ dayColor, nightColor }) => {
 	sunPosition.setFromSphericalCoords(1, phi, theta);
 	useFrame((_, delta) => {
 		sunPosition.setFromSphericalCoords(
-			1,
+			10,
 			Math.abs(Math.sin(phi)) * Math.PI,
 			Math.abs(Math.sin(theta)) * Math.PI
 		);
-		setPhi(phi + 0.1 * delta);
-		setTheta(theta + 0.05 * delta);
+		setPhi(phi + 1 * delta);
+		setTheta(theta + 0.5 * delta);
 	});
+	const factor = 10;
+	const shadowMapSize = 2048;
+	const lightPosition = sunPosition.multiplyScalar(factor)
 	return (
 		<>
 			<Sky
@@ -55,25 +58,25 @@ const Environment = ({ dayColor, nightColor }) => {
 			<directionalLight
 				castShadow
 				color={dayColor}
-				position={sunPosition}
-				intensity={Math.max(0, sunPosition.y * 2)}
-				shadow-mapSize-height={1024}
-				shadow-mapSize-width={1024}
+				position={lightPosition}
+				intensity={Math.max(0, lightPosition.y * 1) / factor * 0.5}
+				shadow-mapSize-height={shadowMapSize}
+				shadow-mapSize-width={shadowMapSize}
 			/>
 			<directionalLight
 				castShadow
 				color={nightColor}
-				position={[sunPosition.x, -sunPosition.y, sunPosition.z]}
-				intensity={Math.max(0, -sunPosition.y) * 0.5}
-				shadow-mapSize-height={1024}
-				shadow-mapSize-width={1024}
+				position={[lightPosition.x, -lightPosition.y, lightPosition.z]}
+				intensity={Math.max(0, -lightPosition.y) / factor * 0.05}
+				shadow-mapSize-height={shadowMapSize}
+				shadow-mapSize-width={shadowMapSize}
 			/>
 			<ambientLight intensity={0.5} />
 		</>
 	);
 };
 
-export default function World({territory}) {
+export default function World({territory, player}) {
 	return (
 		<Canvas
 			shadows
@@ -81,8 +84,8 @@ export default function World({territory}) {
 		>
 			<CameraControls />
 			<Environment dayColor={"#ffffff"} nightColor={"#ffffff"} />
-			<GridFromTerritory territory={territory} receiveShadow castShadow />
-			<Parrot scale={[0.05, 0.05, 0.05]} position={[0, 3, 0]} />
+			<GridFromTerritory territory={territory} player={player} receiveShadow castShadow />
+			<Parrot scale={[0.005, 0.005, 0.005]} position={[1, 2, 1]} />
 		</Canvas>
 	);
 }
