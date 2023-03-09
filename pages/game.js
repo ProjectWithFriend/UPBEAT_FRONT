@@ -71,7 +71,7 @@ export default function Game() {
     useEffect(() => {
         //connect websocket
         if (!fixUseEffect.current) {
-            const socket = new SockJS("http://localhost:8080/ws");
+            const socket = new SockJS(`http://${document.domain}:8080/ws`);
             stompClient.current = over(socket);
             stompClient.current.connect({}, () => {
                 stompClient.current.subscribe("/topic/gameUpdate", (data) => {
