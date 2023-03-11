@@ -142,7 +142,7 @@ export default function Game() {
         }
     }, [currentPlayer])
 
-    const getPlayerId = (playerPage) => {
+    const getPlayerId = () => {
         if (playerPage === '1') {
             return player1.id
         } else {
@@ -153,7 +153,7 @@ export default function Game() {
         <div className="container">
             <div className="main-container">
                 <div className={`map ${isFullScreen ? "full-screen" : ""}`}>
-                    <World territory={territory} player={currentPlayer} />
+                    <World territory={territory} playerId={getPlayerId()} />
                     <div
                         className="boom"
                         onMouseOut={unglow}

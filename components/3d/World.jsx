@@ -76,7 +76,7 @@ const Environment = ({ dayColor, nightColor }) => {
 	);
 };
 
-export default function World({territory, player}) {
+export default function World({territory, playerId}) {
 	return (
 		<Canvas
 			shadows
@@ -84,7 +84,7 @@ export default function World({territory, player}) {
 		>
 			<CameraControls />
 			<Environment dayColor={"#ffffff"} nightColor={"#ffffff"} />
-			<GridFromTerritory territory={territory} player={player} receiveShadow castShadow />
+			<GridFromTerritory territory={territory} playerId={playerId} receiveShadow castShadow />
 			<Parrot scale={[0.005, 0.005, 0.005]} position={[1, 2, 1]} />
 		</Canvas>
 	);
