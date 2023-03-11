@@ -302,6 +302,14 @@
     "@react-spring/shared" "~9.6.1"
     "@react-spring/types" "~9.6.1"
 
+"@react-spring/animated@~9.7.1":
+  version "9.7.1"
+  resolved "https://registry.npmjs.org/@react-spring/animated/-/animated-9.7.1.tgz"
+  integrity sha512-EX5KAD9y7sD43TnLeTNG1MgUVpuRO1YaSJRPawHNRgUWYfILge3s85anny4S4eTJGpdp5OoFV2kx9fsfeo0qsw==
+  dependencies:
+    "@react-spring/shared" "~9.7.1"
+    "@react-spring/types" "~9.7.1"
+
 "@react-spring/core@~9.6.1":
   version "9.6.1"
   resolved "https://registry.npmjs.org/@react-spring/core/-/core-9.6.1.tgz"
@@ -312,10 +320,25 @@
     "@react-spring/shared" "~9.6.1"
     "@react-spring/types" "~9.6.1"
 
+"@react-spring/core@~9.7.1":
+  version "9.7.1"
+  resolved "https://registry.npmjs.org/@react-spring/core/-/core-9.7.1.tgz"
+  integrity sha512-8K9/FaRn5VvMa24mbwYxwkALnAAyMRdmQXrARZLcBW2vxLJ6uw9Cy3d06Z8M12kEqF2bDlccaCSDsn2bSz+Q4A==
+  dependencies:
+    "@react-spring/animated" "~9.7.1"
+    "@react-spring/rafz" "~9.7.1"
+    "@react-spring/shared" "~9.7.1"
+    "@react-spring/types" "~9.7.1"
+
 "@react-spring/rafz@~9.6.1":
   version "9.6.1"
   resolved "https://registry.npmjs.org/@react-spring/rafz/-/rafz-9.6.1.tgz"
   integrity sha512-v6qbgNRpztJFFfSE3e2W1Uz+g8KnIBs6SmzCzcVVF61GdGfGOuBrbjIcp+nUz301awVmREKi4eMQb2Ab2gGgyQ==
+
+"@react-spring/rafz@~9.7.1":
+  version "9.7.1"
+  resolved "https://registry.npmjs.org/@react-spring/rafz/-/rafz-9.7.1.tgz"
+  integrity sha512-JSsrRfbEJvuE3w/uvU3mCTuWwpQcBXkwoW14lBgzK9XJhuxmscGo59AgJUpFkGOiGAVXFBGB+nEXtSinFsopgw==
 
 "@react-spring/shared@~9.6.1":
   version "9.6.1"
@@ -324,6 +347,14 @@
   dependencies:
     "@react-spring/rafz" "~9.6.1"
     "@react-spring/types" "~9.6.1"
+
+"@react-spring/shared@~9.7.1":
+  version "9.7.1"
+  resolved "https://registry.npmjs.org/@react-spring/shared/-/shared-9.7.1.tgz"
+  integrity sha512-R2kZ+VOO6IBeIAYTIA3C1XZ0ZVg/dDP5FKtWaY8k5akMer9iqf5H9BU0jyt3Qtxn0qQY7whQdf6MTcWtKeaawg==
+  dependencies:
+    "@react-spring/rafz" "~9.7.1"
+    "@react-spring/types" "~9.7.1"
 
 "@react-spring/three@~9.6.1":
   version "9.6.1"
@@ -339,6 +370,21 @@
   version "9.6.1"
   resolved "https://registry.npmjs.org/@react-spring/types/-/types-9.6.1.tgz"
   integrity sha512-POu8Mk0hIU3lRXB3bGIGe4VHIwwDsQyoD1F394OK7STTiX9w4dG3cTLljjYswkQN+hDSHRrj4O36kuVa7KPU8Q==
+
+"@react-spring/types@~9.7.1":
+  version "9.7.1"
+  resolved "https://registry.npmjs.org/@react-spring/types/-/types-9.7.1.tgz"
+  integrity sha512-yBcyfKUeZv9wf/ZFrQszvhSPuDx6Py6yMJzpMnS+zxcZmhXPeOCKZSHwqrUz1WxvuRckUhlgb7eNI/x5e1e8CA==
+
+"@react-spring/web@^9.0.0-rc.3":
+  version "9.7.1"
+  resolved "https://registry.npmjs.org/@react-spring/web/-/web-9.7.1.tgz"
+  integrity sha512-6uUE5MyKqdrJnIJqlDN/AXf3i8PjOQzUuT26nkpsYxUGOk7c+vZVPcfrExLSoKzTb9kF0i66DcqzO5fXz/Z1AA==
+  dependencies:
+    "@react-spring/animated" "~9.7.1"
+    "@react-spring/core" "~9.7.1"
+    "@react-spring/shared" "~9.7.1"
+    "@react-spring/types" "~9.7.1"
 
 "@react-three/drei@^9.56.25":
   version "9.56.27"
@@ -900,6 +946,13 @@ delayed-stream@~1.0.0:
   resolved "https://registry.npmjs.org/delayed-stream/-/delayed-stream-1.0.0.tgz"
   integrity sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==
 
+detect-gpu@^3.0.0:
+  version "3.1.30"
+  resolved "https://registry.npmjs.org/detect-gpu/-/detect-gpu-3.1.30.tgz"
+  integrity sha512-WUOk8imHH56AWVt6iHry69qbNEFsPjtS6qsinurfxeI3bVYQZzFk8zECTaodLxfeRad7QspDjjkJWkp5vBo8WA==
+  dependencies:
+    webgl-constants "^1.1.1"
+
 detect-gpu@^5.0.10:
   version "5.0.13"
   resolved "https://registry.npmjs.org/detect-gpu/-/detect-gpu-5.0.13.tgz"
@@ -932,6 +985,23 @@ draco3d@^1.4.1:
   version "1.5.6"
   resolved "https://registry.npmjs.org/draco3d/-/draco3d-1.5.6.tgz"
   integrity sha512-+3NaRjWktb5r61ZFoDejlykPEFKT5N/LkbXsaddlw6xNSXBanUYpFc2AXXpbJDilPHazcSreU/DpQIaxfX0NfQ==
+
+drei@^2.2.21:
+  version "2.2.21"
+  resolved "https://registry.npmjs.org/drei/-/drei-2.2.21.tgz"
+  integrity sha512-ue0fmH0VfyYUeHyyEggSsIvYQrSY3mUdW4MDiTxn69hQ08S52Z1bAHsBsE7o7TQD8cBQu+oGCRGXf7HBOUYgng==
+  dependencies:
+    "@babel/runtime" "^7.11.2"
+    "@react-spring/web" "^9.0.0-rc.3"
+    detect-gpu "^3.0.0"
+    glsl-noise "^0.0.0"
+    lodash.omit "^4.5.0"
+    lodash.pick "^4.4.0"
+    react-merge-refs "^1.0.0"
+    stats.js "^0.17.0"
+    troika-three-text "^0.34.2"
+    utility-types "^3.10.0"
+    zustand "^3.0.3"
 
 emoji-regex@^9.2.2:
   version "9.2.2"
@@ -2267,7 +2337,7 @@ react-is@^16.13.1:
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-merge-refs@^1.1.0:
+react-merge-refs@^1.0.0, react-merge-refs@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/react-merge-refs/-/react-merge-refs-1.1.0.tgz"
   integrity sha512-alTKsjEL0dKH/ru1Iyn7vliS2QRcBp9zZPGoWxUOvRGWPUYgjo+V01is7p04It6KhgrzhJGnIj9GgX8W4bZoCQ==
@@ -2629,6 +2699,14 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
+troika-three-text@^0.34.2:
+  version "0.34.2"
+  resolved "https://registry.npmjs.org/troika-three-text/-/troika-three-text-0.34.2.tgz"
+  integrity sha512-2YNZjI1TJXDrSz3JvQEW4GXJ6/Zlca+On0rbPyqGvcKYZTXzHkUd7a/wBIBicP9Ca/W+V0E+BVLvsoZEXjqTfg==
+  dependencies:
+    troika-three-utils "^0.34.0"
+    troika-worker-utils "^0.34.1"
+
 troika-three-text@^0.47.1:
   version "0.47.1"
   resolved "https://registry.npmjs.org/troika-three-text/-/troika-three-text-0.47.1.tgz"
@@ -2639,10 +2717,20 @@ troika-three-text@^0.47.1:
     troika-worker-utils "^0.47.0"
     webgl-sdf-generator "1.1.1"
 
+troika-three-utils@^0.34.0:
+  version "0.34.0"
+  resolved "https://registry.npmjs.org/troika-three-utils/-/troika-three-utils-0.34.0.tgz"
+  integrity sha512-6Dm6FzGFpuiehjKkm3wAV3e+SPnHQ+GxwXnHFToKLcQ1/gVDOIL69BWCosrlEUb0SUOQjQv6sd5QpNT6IIewpQ==
+
 troika-three-utils@^0.47.0:
   version "0.47.0"
   resolved "https://registry.npmjs.org/troika-three-utils/-/troika-three-utils-0.47.0.tgz"
   integrity sha512-yoVTQxVbpQX3a55giIwqwq6hyJA6oYvq7kaNGwFTeicoWmTZCqqTbytafx1gcuL5umrtw5MYgsxYUSOha+xp5w==
+
+troika-worker-utils@^0.34.1:
+  version "0.34.1"
+  resolved "https://registry.npmjs.org/troika-worker-utils/-/troika-worker-utils-0.34.1.tgz"
+  integrity sha512-zLTSB6ISd/dpBMG6PFR2v7sqU2bqVwOUd45iWzcgcRE9+w/5YJN8h0+H5EmgRPIVe5xus0UZQKUgVH6FRA+YdQ==
 
 troika-worker-utils@^0.47.0:
   version "0.47.0"
@@ -2862,7 +2950,7 @@ zstddec@^0.0.2:
   resolved "https://registry.npmjs.org/zstddec/-/zstddec-0.0.2.tgz"
   integrity sha512-DCo0oxvcvOTGP/f5FA6tz2Z6wF+FIcEApSTu0zV5sQgn9hoT5lZ9YRAKUraxt9oP7l4e8TnNdi8IZTCX6WCkwA==
 
-zustand@^3.5.13, zustand@^3.7.1:
+zustand@^3.0.3, zustand@^3.5.13, zustand@^3.7.1:
   version "3.7.2"
   resolved "https://registry.npmjs.org/zustand/-/zustand-3.7.2.tgz"
   integrity sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA==

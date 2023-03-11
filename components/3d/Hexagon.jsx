@@ -1,7 +1,7 @@
-import { useFrame, useLoader, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
-import { Color, TextureLoader } from "three";
 import { CoconutTree } from "./models/CoconutTree";
+import Grass from "./textures/Grass";
 
 function BaseHexagon(props) {
 	const [objects, setObjects] = useState([]);
@@ -19,7 +19,7 @@ function BaseHexagon(props) {
 		}
 		setObjects(contents);
 	}, []);
-	const colorMap = useLoader(TextureLoader, "textures/SO4M8W0.png");
+	const grass = Grass();
 	return (
 		<>
 			<cylinderGeometry
@@ -30,7 +30,7 @@ function BaseHexagon(props) {
 					6,
 				]}
 			/>
-			<meshStandardMaterial map={colorMap} />
+			<meshStandardMaterial color={props.color} />
 			{...objects}
 		</>
 	);
@@ -44,7 +44,7 @@ function EdgeHexagon(props) {
 	);
 }
 
-function Hexagon(props) {
+function Hexagon({data, ...props}) {
 	const ref = useRef();
 	const [hovered, hover] = useState(false);
 	const [t, setT] = useState(0);
@@ -58,6 +58,12 @@ function Hexagon(props) {
 			else setT(t - delta);
 		}
 	});
+
+	useEffect(() => {
+		if (!hovered)
+			return;
+		console.log(data);
+	}, [hovered])
 
 	const positionY = props.position == null ? 1 : props.position[1];
 	const scale =
@@ -75,21 +81,12 @@ function Hexagon(props) {
 			object.scale.z =
 				Math.max(scale, scale + 0.14 * Math.tanh(t * Math.PI));
 	}, [t]);
-
-	const {
-		camera,
-		gl: { domElement },
-	} = useThree();
 	return (
 		<mesh
 			ref={ref}
 			{...props}
-			onPointerOver={() => {
-				hover(true);
-			}}
-			onPointerOut={() => {
-				hover(false);
-			}}
+			onPointerOver={() => hover(true)}
+			onPointerOut={() => hover(false)}
 		>
 			<>
 				<BaseHexagon {...props} objectEnabled />

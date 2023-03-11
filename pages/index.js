@@ -1,5 +1,5 @@
 import {useRouter} from "next/router";
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {over} from "stompjs";
 import SockJS from "sockjs-client";
 import axios from "axios";
@@ -14,10 +14,10 @@ export default function Home() {
     const stompClient = useRef(null);
     const fixUseEffect = useRef(false);
     const router = useRouter();
-
-
+    let playerPage;
     useEffect(() => {
         if (fixUseEffect.current === false) {
+            localStorage.clear()
             const socket = new SockJS(`http://${document.domain}:8080/ws`);
             let client = over(socket);
             client.debug = (str) => {
@@ -25,9 +25,11 @@ export default function Home() {
             };
             client.connect({}, () => {
                 stompClient.current = client;
+                stompClient.current.debug = null;
                 stompClient.current.subscribe(`/user/topic/playerSlot`, (data) => {
                     data = JSON.parse(data.body);
                     setPlayerSlot(data.playerSlot)
+                    playerPage = data.playerSlot;
                 });
                 stompClient.current.subscribe("/topic/name", (data) => {
                     data = JSON.parse(data.body);
@@ -45,17 +47,20 @@ export default function Home() {
                             player_2_name: localStorage.getItem("nameP2"),
                         }
                         const res = await axios.post(
-                            "http://localhost:8080/api/createGame"
+                            `http://${document.domain}:8080/api/createGame`
                             , body
                         );
                         const data = res.data;
-                        localStorage.setItem("init_territory", JSON.stringify(data.territory));
+                        localStorage.setItem("territory", JSON.stringify(data.territory));
                         localStorage.setItem("init_player1", JSON.stringify(data.player1));
                         localStorage.setItem("init_player2", JSON.stringify(data.player2));
+                        localStorage.setItem("current_player", JSON.stringify(data.currentPlayer));
                     } catch (error) {
+                        localStorage.setItem("stomp" , JSON.stringify(stompClient.current));
                         console.log(error);
                     }
-                    await router.push("/game");
+                    stompClient.current.disconnect();
+                    await router.push({pathname: "/game", query: {playerSlot: playerPage}});
                 });
                 stompClient.current.send("/app/ready/lockPlayerSlot", {}, JSON.stringify());
             });
@@ -153,7 +158,7 @@ export default function Home() {
     }, [playerSlot])
 
     return (
-        <div className="container main-layout" >
+        <div className="container main-layout">
             <h1>UPBEAT</h1>
             <div className="playerBox">
                 <div className="player player-1" onClick={() => sweetAlert1()}>
