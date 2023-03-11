@@ -2,6 +2,7 @@ import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import { Color, TextureLoader } from "three";
 import { CoconutTree } from "./models/CoconutTree";
+import Grass from "./textures/Grass";
 
 function BaseHexagon(props) {
 	const [objects, setObjects] = useState([]);
@@ -19,7 +20,7 @@ function BaseHexagon(props) {
 		}
 		setObjects(contents);
 	}, []);
-	const colorMap = useLoader(TextureLoader, "textures/SO4M8W0.png");
+	const grass = Grass();
 	return (
 		<>
 			<cylinderGeometry
@@ -30,8 +31,8 @@ function BaseHexagon(props) {
 					6,
 				]}
 			/>
-			<meshStandardMaterial map={colorMap} />
-			{...objects}
+			<meshStandardMaterial color={props.color} />
+			{/* {...objects} */}
 		</>
 	);
 }

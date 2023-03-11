@@ -9,14 +9,16 @@ function getPosition(x, z, props) {
 	return [newX, 1, newZ];
 }
 
-function getColor(region, props) {
+function getColor(region, player) {
 	if (region.isCityCenter)
-		return region.owner.id % 2 == 0 ? 'darkred' : 'darkblue'
+		return region.owner.id != player.id ? 'darkred' : 'darkblue'
 	else if (region.owner != null)
-		return region.owner.id % 2 == 0 ? 'red' : 'blue';
+		return region.owner.id != player.id ? 'pink' : 'skyblue';
+	else
+		return 'white';
 }
 
-function functionalGrid(territory, props) {
+function functionalGrid(territory, player, props) {
 	const hexagons = [];
 	for (const region of territory) {
 		props.radius = 0.5;
@@ -28,7 +30,7 @@ function functionalGrid(territory, props) {
 				key={name}
 				name={name}
 				position={getPosition(region.location.x, region.location.y, props)}
-				color={getColor(region, props)}
+				color={getColor(region, player)}
 				rotation-y={0.5 * Math.PI}
 			/>
 		);
@@ -86,9 +88,9 @@ function worldGrid(territory, props) {
 	return hexagons;
 }
 
-export default function GridFromTerritory({ territory, ...props }) {
+export default function GridFromTerritory({ territory, player, ...props }) {
 	props.worldSize = 100;
 	return <>
-		{functionalGrid(territory, props)}
+		{functionalGrid(territory, player, props)}
 	</>
 }
