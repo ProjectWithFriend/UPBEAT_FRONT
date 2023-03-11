@@ -80,6 +80,11 @@ export default function Game() {
                     setCurrentPlayer(data.currentPlayer);
                     setPlayer1(data.player1);
                     setPlayer2(data.player2);
+
+                    localStorage.setItem("init_player1", JSON.stringify(data.player1));
+                    localStorage.setItem("init_player2", JSON.stringify(data.player2));
+                    localStorage.setItem("current_player", JSON.stringify(data.currentPlayer));
+                    localStorage.setItem("territory", JSON.stringify(data.territory));
                 })
             })
 
@@ -115,32 +120,57 @@ export default function Game() {
     }, [isFullScreen])
 
     //decorate the player when is his turn
-    const [p1Turn, setP1Turn] = useState(true)
-    const [p2Turn, setP2Turn] = useState(false)
+    const player1DomElement = useRef(null)
+    const player2DomElement = useRef(null)
+    const [player1Children, sSlayer1Children] = useState(null)
+    const [player2Children, sSlayer2Children] = useState(null)
     useEffect(() => {
-        if (playerPage === '1') {
-            document.querySelector(`.player${playerPage}`).style.boxShadow = '0 0 10px #e5d772'
-            document.querySelector(`.player${playerPage}`).style.border = '3px solid #e5d772'
-            if(currentPlayer.id === player1.id){
-                document.querySelector(".h3-player1").style.textShadow = '0 0 10px #cc72e5'
-                document.querySelector(".h3-player1").style.color = '#000000'
-                document.querySelector(".h3-player1").innerHTML = `${player1.name} : ${player1.id} (Your Turn)`
+        if (player1DomElement.current !== null && player2DomElement.current !== null) {
+            let turns = {p1: false, p2: false}
+            if (playerPage === '1') {
+                //player 1 section
+                let isMineTurn = currentPlayer.id === player1.id
+                player1DomElement.current.style.boxShadow = `0 0 ${isMineTurn ? '10px' : '0px'} #e5d772`
+                player1DomElement.current.style.border = '3px solid #e5d772'
+
+                //player 2 section
+                player2DomElement.current.style.boxShadow = `0 0 0px #e5d772`
+                player2DomElement.current.style.border = '3px solid #e5d772'
+                player2DomElement.current.style.color = '#000000'
+
             }else{
-                document.querySelector(".h3-player1").style.textShadow = '0 0 0px #cc72e5'
-                document.querySelector(".h3-player1").innerHTML = `${player1.name} : ${player1.id}`
+                //player 2 section
+                let isMineTurn = currentPlayer.id === player2.id
+                player2DomElement.current.style.boxShadow = `0 0 ${isMineTurn ? '10px' : '0px'} #e5d772`
+                player2DomElement.current.style.border = '3px solid #e5d772'
+
+                //player 1 section
+                player1DomElement.current.style.boxShadow = `0 0 0px #e5d772`
+                player1DomElement.current.style.border = '3px solid #e5d772'
+                player1DomElement.current.style.color = '#000000'
             }
-        } else {
-            document.querySelector(`.player${playerPage}`).style.boxShadow = '0 0 10px #e5d772'
-            document.querySelector(`.player${playerPage}`).style.border = '3px solid #e5d772'
-            if(currentPlayer.id === player2.id){
-                document.querySelector(".h3-player2").style.textShadow = '0 0 10px #cc72e5'
-                document.querySelector(".h3-player2").innerHTML = `${player2.name} : ${player2.id} (Your Turn)`
-            }else{
-                document.querySelector(".h3-player2").style.textShadow = '0 0 10px #cc72e5'
-                document.querySelector(".h3-player2").innerHTML = `${player2.name} : ${player2.id}`
-            }
+            sSlayer1Children(
+                <>
+                    <h3 style={{color: playerPage === '1' ? 'blue' : 'red'}}>
+                        {`${player1.name} : ${player1.id} `}
+                        {currentPlayer.id === player1.id && currentPlayer.id === getPlayerId() ? '(Your turn)' : ''}
+                    </h3>
+                    <p>money : {player1.budget}</p>
+                    <p>Time left : 00 mins</p>
+                </>
+            )
+            sSlayer2Children(
+                <>
+                    <h3 style={{color: playerPage === '2' ? 'blue' : 'red'}}>
+                        {`${player2.name} : ${player2.id} `}
+                        {currentPlayer.id === player2.id && currentPlayer.id === getPlayerId() ? '(Your turn)' : ''}
+                    </h3>
+                    <p>money : {player2.budget}</p>
+                    <p>Time left : 00 mins</p>
+                </>
+            )
         }
-    }, [currentPlayer])
+    }, [player1DomElement, player2DomElement, player1, player2, playerPage])
 
     const getPlayerId = () => {
         if (playerPage === '1') {
@@ -153,7 +183,7 @@ export default function Game() {
         <div className="container">
             <div className="main-container">
                 <div className={`map ${isFullScreen ? "full-screen" : ""}`}>
-                    <World territory={territory} playerId={getPlayerId()} />
+                    <World territory={territory} playerId={getPlayerId()}/>
                     <div
                         className="boom"
                         onMouseOut={unglow}
@@ -173,19 +203,11 @@ export default function Game() {
             </div>
             <div className="status-container">
                 <div className="player-status">
-                    <div className="st player1">
-                        <h3 className="h3-player1">
-                            {player1.name} : {player1.id}
-                        </h3>
-                        <p>money : {player1.budget}</p>
-                        <p>Time left : 00 mins</p>
+                    <div className="st player1" ref={player1DomElement}>
+                        {player1Children}
                     </div>
-                    <div className="st player2">
-                        <h3 className="h3-player2">
-                            {player2.name} : {player2.id}
-                        </h3>
-                        <p>money : {player2.budget}</p>
-                        <p>Time left : 00 mins</p>
+                    <div className="st player2" ref={player2DomElement}>
+                        {player2Children}
                     </div>
                 </div>
                 <div className="roundTime">
