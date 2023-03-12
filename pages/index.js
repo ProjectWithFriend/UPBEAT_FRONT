@@ -37,11 +37,17 @@ export default function Home() {
                     data = JSON.parse(data.body);
                     setNameP1(data.nameP1);
                     setNameP2(data.nameP2);
+                    if(data.config !== null){
+                        updateProps(data.config);
+                        localStorage.setItem("config", JSON.stringify(data.config));
+                    }
                 });
                 stompClient.current.subscribe("/topic/name", (data) => {
                     data = JSON.parse(data.body);
                     setNameP1(data.nameP1);
                     setNameP2(data.nameP2);
+                    localStorage.setItem("nameP1", data.nameP1);
+                    localStorage.setItem("nameP2", data.nameP2);
                     setReadyP1(data.nameP1 !== "");
                     setReadyP2(data.nameP2 !== "");
                 });
@@ -51,6 +57,7 @@ export default function Home() {
                         const body = {
                             player_1_name: localStorage.getItem("nameP1"),
                             player_2_name: localStorage.getItem("nameP2"),
+                            config : JSON.parse(localStorage.getItem("config"))
                         }
                         const res = await axios.post(
                             `http://${document.domain}:8080/api/createGame`
@@ -71,6 +78,7 @@ export default function Home() {
                 stompClient.current.subscribe("/topic/updateConfig", (data) => {
                     data = JSON.parse(data.body);
                     updateProps(data);
+                    localStorage.setItem("config", JSON.stringify(data));
                 })
                 stompClient.current.send("/app/ready/lockPlayerSlot", {}, JSON.stringify());
             });
