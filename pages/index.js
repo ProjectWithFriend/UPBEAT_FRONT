@@ -4,6 +4,8 @@ import {over} from "stompjs";
 import SockJS from "sockjs-client";
 import axios from "axios";
 import Swal from "sweetalert2";
+import ConfigModal from "../components/ConfigModal";
+import Script from "next/script";
 
 export default function Home() {
     const [nameP1, setNameP1] = useState("");
@@ -31,6 +33,15 @@ export default function Home() {
                     setPlayerSlot(data.playerSlot)
                     playerPage = data.playerSlot;
                 });
+                stompClient.current.subscribe("/app/ready/entry", (data) => {
+                    data = JSON.parse(data.body);
+                    setNameP1(data.nameP1);
+                    setNameP2(data.nameP2);
+                    if(data.config !== null){
+                        updateProps(data.config);
+                        localStorage.setItem("config", JSON.stringify(data.config));
+                    }
+                });
                 stompClient.current.subscribe("/topic/name", (data) => {
                     data = JSON.parse(data.body);
                     setNameP1(data.nameP1);
@@ -42,9 +53,11 @@ export default function Home() {
                 });
                 stompClient.current.subscribe("/topic/gameStart", async () => {
                     try {
+                        console.log(props);
                         const body = {
                             player_1_name: localStorage.getItem("nameP1"),
                             player_2_name: localStorage.getItem("nameP2"),
+                            config : JSON.parse(localStorage.getItem("config"))
                         }
                         const res = await axios.post(
                             `http://${document.domain}:8080/api/createGame`
@@ -55,13 +68,22 @@ export default function Home() {
                         localStorage.setItem("init_player1", JSON.stringify(data.player1));
                         localStorage.setItem("init_player2", JSON.stringify(data.player2));
                         localStorage.setItem("current_player", JSON.stringify(data.currentPlayer));
+                        stompClient.current.disconnect();
+                        await router.push({pathname: "/game", query: {playerSlot: playerPage}});
                     } catch (error) {
-                        localStorage.setItem("stomp" , JSON.stringify(stompClient.current));
-                        console.log(error);
+                        Swal.fire({
+                            title: "Can't start game",
+                            text: `${error.response.data.message}`,
+                            icon: "error",
+                            confirmButtonText: "OK"
+                        })
                     }
-                    stompClient.current.disconnect();
-                    await router.push({pathname: "/game", query: {playerSlot: playerPage}});
                 });
+                stompClient.current.subscribe("/topic/updateConfig", (data) => {
+                    data = JSON.parse(data.body);
+                    updateProps(data);
+                    localStorage.setItem("config", JSON.stringify(data));
+                })
                 stompClient.current.send("/app/ready/lockPlayerSlot", {}, JSON.stringify());
             });
 
@@ -98,7 +120,6 @@ export default function Home() {
             stompClient.current.send("/app/ready/start", {}, JSON.stringify({}));
         }
     };
-
     //make sweetalert when click player-1 or player-2
     const sweetAlert1 = () => {
         if (playerSlot === 2) {
@@ -157,6 +178,71 @@ export default function Home() {
         }
     }, [playerSlot])
 
+    //Work with modal
+    const [props, setProps] = useState({
+        rows : 20,
+        cols : 15,
+        initPlanMin : 5,
+        initPlanSec : 0,
+        initBudget : 10000,
+        initCenterDep : 100,
+        planRevMin : 30,
+        planRevSec : 0,
+        revCost : 100,
+        maxDep : 1000000,
+        interestPct : 5,
+    });
+
+    const updateProps = (data) =>{
+        let temp = {};
+        for(let prop in data){
+            temp[prop] = data[prop];
+        }
+        setProps(temp);
+    }
+    const onConfigChange = (value , prop_name) => {
+        switch (prop_name) {
+            case "rows":
+                props.rows = value;
+                break;
+            case "cols":
+                props.cols = value;
+                break;
+            case "initPlanMin":
+                props.initPlanMin = value;
+                break;
+            case "initPlanSec":
+                props.initPlanSec = value;
+                break;
+            case "initBudget":
+                props.initBudget = value;
+                break;
+            case "initCenterDep":
+                props.initCenterDep = value;
+                break;
+            case "planRevMin":
+                props.planRevMin = value;
+                break;
+            case "planRevSec":
+                props.planRevSec = value;
+                break;
+            case "revCost":
+                props.revCost = value;
+                break;
+            case "maxDep":
+                props.maxDep = value;
+                break;
+            case "interestPct":
+                props.interestPct = value;
+                break;
+            default:
+                break;
+        }
+    };
+
+    const onConfigSubmit = () => {
+        stompClient.current.send("/app/ready/updateConfig", {}, JSON.stringify(props));
+    }
     return (
         <div className="container main-layout">
             <h1>UPBEAT</h1>
@@ -199,6 +285,10 @@ export default function Home() {
             <button className="start-btn" onClick={() => start()}>
                 {readyP2 && readyP1 ? "Start" : "Wait for start"}
             </button>
+            <button className="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#configModal">Game
+                Configuration
+            </button>
+            <ConfigModal props={props} onConfigChange={onConfigChange} onConfigSubmit={onConfigSubmit}  />
             <span className="credit">© 2023 Our Group. All rights reserved.</span>
         </div>
     );
