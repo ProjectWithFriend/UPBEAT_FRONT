@@ -68,12 +68,16 @@ export default function Home() {
                         localStorage.setItem("init_player1", JSON.stringify(data.player1));
                         localStorage.setItem("init_player2", JSON.stringify(data.player2));
                         localStorage.setItem("current_player", JSON.stringify(data.currentPlayer));
+                        stompClient.current.disconnect();
+                        await router.push({pathname: "/game", query: {playerSlot: playerPage}});
                     } catch (error) {
-                        localStorage.setItem("stomp", JSON.stringify(stompClient.current));
-                        console.log(error);
+                        Swal.fire({
+                            title: "Can't start game",
+                            text: `${error.response.data.message}`,
+                            icon: "error",
+                            confirmButtonText: "OK"
+                        })
                     }
-                    stompClient.current.disconnect();
-                    await router.push({pathname: "/game", query: {playerSlot: playerPage}});
                 });
                 stompClient.current.subscribe("/topic/updateConfig", (data) => {
                     data = JSON.parse(data.body);
@@ -116,7 +120,6 @@ export default function Home() {
             stompClient.current.send("/app/ready/start", {}, JSON.stringify({}));
         }
     };
-
     //make sweetalert when click player-1 or player-2
     const sweetAlert1 = () => {
         if (playerSlot === 2) {

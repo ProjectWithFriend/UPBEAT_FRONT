@@ -18,6 +18,7 @@ export default function ConfigModal({props, onConfigChange, onConfigSubmit}) {
                                     <input type="number" className="form-control" id="m" min="1"
                                            defaultValue={props.rows}
                                            onChange={(e) => {
+                                               if(e.target.value === "") e.target.value = '0';
                                                onConfigChange(e.target.value, "rows")
                                            }}
                                     />
@@ -27,6 +28,7 @@ export default function ConfigModal({props, onConfigChange, onConfigSubmit}) {
                                     <input type="number" className="form-control" id="n" min="1"
                                            defaultValue={props.cols}
                                            onChange={(e) => {
+                                               if(e.target.value === "") e.target.value = '0';
                                                onConfigChange(e.target.value, "cols")
                                            }}
                                     />
@@ -36,6 +38,7 @@ export default function ConfigModal({props, onConfigChange, onConfigSubmit}) {
                                     <input type="number" className="form-control" id="init_plan_min" min="0"
                                            max="59" defaultValue={props.initPlanMin}
                                            onChange={(e) => {
+                                               if(e.target.value === "") e.target.value = '0';
                                                onConfigChange(e.target.value, "initPlanMin")
                                            }}
                                     />
@@ -45,6 +48,7 @@ export default function ConfigModal({props, onConfigChange, onConfigSubmit}) {
                                     <input type="number" className="form-control" id="init_plan_sec" min="0"
                                            max="59" defaultValue={props.initPlanSec}
                                            onChange={(e) => {
+                                               if(e.target.value === "") e.target.value = '0';
                                                onConfigChange(e.target.value, "initPlanSec")
                                            }}
                                     />
@@ -54,6 +58,7 @@ export default function ConfigModal({props, onConfigChange, onConfigSubmit}) {
                                     <input type="number" className="form-control" id="init_budget"
                                            min="1" defaultValue={props.initBudget}
                                            onChange={(e) => {
+                                               if(e.target.value === "") e.target.value = '0';
                                                onConfigChange(e.target.value, "initBudget")
                                            }}
                                     />
@@ -63,6 +68,7 @@ export default function ConfigModal({props, onConfigChange, onConfigSubmit}) {
                                     <input type="number" className="form-control" id="init_center_dep"
                                            min="1" defaultValue={props.initCenterDep}
                                            onChange={(e) => {
+                                               if(e.target.value === "") e.target.value = '0';
                                                onConfigChange(e.target.value, "initCenterDep")
                                            }}
                                     />
@@ -74,6 +80,7 @@ export default function ConfigModal({props, onConfigChange, onConfigSubmit}) {
                                     <input type="number" className="form-control" id="plan_rev_min" min="0"
                                            max="59" defaultValue={props.planRevMin}
                                            onChange={(e) => {
+                                               if(e.target.value === "") e.target.value = '0';
                                                onConfigChange(e.target.value, "planRevMin")
                                            }}
                                     />
@@ -83,6 +90,7 @@ export default function ConfigModal({props, onConfigChange, onConfigSubmit}) {
                                     <input type="number" className="form-control" id="plan_rev_sec" min="0"
                                            max="59" defaultValue={props.planRevSec}
                                            onChange={(e) => {
+                                               if(e.target.value === "") e.target.value = '0';
                                                onConfigChange(e.target.value, "planRevSec")
                                            }}
                                     />
@@ -92,6 +100,7 @@ export default function ConfigModal({props, onConfigChange, onConfigSubmit}) {
                                     <input type="number" className="form-control" id="rev_cost" min="1"
                                            defaultValue={props.revCost}
                                            onChange={(e) => {
+                                               if(e.target.value === "") e.target.value = '0';
                                                onConfigChange(e.target.value, "revCost")
                                            }}
                                     />
@@ -101,6 +110,7 @@ export default function ConfigModal({props, onConfigChange, onConfigSubmit}) {
                                     <input type="number" className="form-control" id="max_dep" min="1"
                                            defaultValue={props.maxDep}
                                            onChange={(e) => {
+                                               if(e.target.value === "") e.target.value = '0';
                                                onConfigChange(e.target.value, "maxDep")
                                            }}
                                     />
@@ -110,6 +120,7 @@ export default function ConfigModal({props, onConfigChange, onConfigSubmit}) {
                                     <input type="number" className="form-control" id="interest_pct" min="0"
                                            max="100" defaultValue={props.interestPct}
                                            onChange={(e) => {
+                                               if(e.target.value === "") e.target.value = '0';
                                                onConfigChange(e.target.value, "interestPct")
                                            }}
                                     />

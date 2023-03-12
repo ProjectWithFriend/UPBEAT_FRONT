@@ -9,8 +9,8 @@ import Swal from "sweetalert2";
 
 export default function Editor({playerPage , currentPlayer, player1,player2}) {
     const [code, setCode] = useState();
+    const [oldCode, setOldCode] = useState();
     let isfistSubmit = useRef(true);
-    let oldCode = "";
     const onChange = useCallback((value, _) => {
         setCode(value);
     });
@@ -28,7 +28,7 @@ export default function Editor({playerPage , currentPlayer, player1,player2}) {
                 construction_plan : code,
                 player_id : player_id
             });
-            oldCode = code;
+            setOldCode(code);
             isfistSubmit.current = false;
         } catch (e) {
             sweetAlert(e.response.data.message)
@@ -45,6 +45,7 @@ export default function Editor({playerPage , currentPlayer, player1,player2}) {
     }
 
     const confirmToEdit = () =>{
+        let revisionCost = JSON.parse(localStorage.getItem('config')).revCost;
         Swal.fire({
             title: 'Are you sure?',
             text: `You construction plan have been changed if you continue you have to pay ${revisionCost} $`,
@@ -63,6 +64,7 @@ export default function Editor({playerPage , currentPlayer, player1,player2}) {
     const checkRevision = () =>{
         console.log(isfistSubmit.current);
         if(oldCode !== code && !isfistSubmit.current){
+            console.log(oldCode + " " + code + " " + isfistSubmit.current);
             confirmToEdit();
         }else{
             submitCode();
