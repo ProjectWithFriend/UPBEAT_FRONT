@@ -82,6 +82,7 @@ export default function Home() {
                 stompClient.current.subscribe("/topic/updateConfig", (data) => {
                     data = JSON.parse(data.body);
                     updateProps(data);
+                    SwalUpdateConfig();
                     localStorage.setItem("config", JSON.stringify(data));
                 })
                 stompClient.current.send("/app/ready/lockPlayerSlot", {}, JSON.stringify());
@@ -92,6 +93,15 @@ export default function Home() {
             }
         }
     }, []);
+
+    function SwalUpdateConfig() {
+        Swal.fire({
+            title: "Update config",
+            text: "Config has been updated",
+            icon: "success",
+            confirmButtonText: "OK"
+        })
+    }
     const nameChangeP1 = (name) => {
         setNameP1(name);
         stompClient.current.send(
