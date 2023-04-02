@@ -203,6 +203,10 @@ export default function Home() {
         interestPct : 5,
     });
 
+    useEffect(() =>{
+       localStorage.setItem("config", JSON.stringify(props));
+    },[])
+
     const updateProps = (data) =>{
         let temp = {};
         for(let prop in data){
