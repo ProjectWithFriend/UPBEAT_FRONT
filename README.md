@@ -1,6 +1,6 @@
 # FrontEnd of UPBEAT PROJECT
 
-BackEnd : https://github.com/AuJUngZ/UPBEAT
+BackEnd : https://github.com/Project261/UPBEAT_SPRING
 
 ## Now we are using Next.js (version 12)
 
